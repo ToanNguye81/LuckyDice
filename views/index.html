@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Bài làm - Lucky Dice Casino</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+</head>
+<style>
+    .picture-cover {
+        background-image: url(LuckyDiceImages/cover.jpg);
+        min-height: 100px;
+        margin: 5px;
+    }
+</style>
+
+<body>
+    <div class="container-fluid">
+        <div class="picture-cover">
+            <img src="" alt="">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row ">
+            <div class="col-sm-5">
+                <div class="row form-group">
+                    <div class="col-12">
+                        <h4>Nhập thông tin của bạn</h4>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Username</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="inp-user-name" class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4 ">
+                        <label>Firstname</label>
+                    </div>
+                    <div class="col-8 ">
+                        <input id="inp-first-name" class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label>Lastname</label>
+                    </div>
+                    <div class="col-8 ">
+                        <input id="inp-last-name" class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label></label>
+                    </div>
+                    <div class="col-8">
+                        <p id="p-notification-validate"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 text-center ">
+                <div class="row form-group">
+                    <div class="col-12">
+                        <input id="btn-dice" class="btn btn-success button-width w-75" value="Ném" type="button">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-12 ">
+                        <img id="img-dice" class="img-thumbnail" src="LuckyDiceImages/dice.png">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-12">
+                        <p id="p-notification-dice">Chúc mừng bạn hãy chơi tiếp lần nữa !!!</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-3 text-center">
+                <div class="row form-group">
+                    <div class="col-12 ">
+                        <p>Voucher</p>
+                        <p id="p-voucher-id">No ID</p>
+                        <p id="p-voucher-percent">0%</p>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-12">
+                        <img id="img-present" class="img-thumbnail" src="LuckyDiceImages/no-present.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row text-center">
+                <div class="col-12 ">
+                    <input id="btn-dice-history" class="btn btn-primary button-width w-25" value="Dice History" type="button">
+                    <input id="btn-voucher-history" class="btn btn-primary button-width w-25" value="Voucher History" type="button">
+                    <input id="btn-present-history" class="btn btn-primary button-width w-25" value="Present History" type="button">
+                </div>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-12 ">
+                <table id="history-placeholder-table" class="table table-striped table-hover border">
+                    <tbody>
+                        <tr>
+                            <th>Lượt</th>
+                            <th>Kết Quả</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    'use strict';
+    /*** REGION 1 - Global variables - Vùng khai báo biến, hằng số, tham số TOÀN CỤC */
+
+    //hằng số định nghĩa chỉ số hàng đầu của bảng :0
+    //By default, insertRow() will insert to the bottom of the table:-1
+    const gEND_ROW_TABLE = -1; // Thêm vào cuối bảng
+
+    // Biến toàn cục định nghĩa chỉ số các cột tương ứng
+    const gLUOT_COL = 0;
+    const gKET_QUA_COL = 1;
+
+    // Gán các hằng số cần dùng gọi sever
+    const gREQUEST_STATUS_OK = 200
+    const gREQUEST_READY_STATUS_FINISH_AND_OK = 4;
+    //const gBASE_URL = "http://42.115.221.44:8080/devcamp-register-java-api/users";
+    //const gBASE_URL = "http://42.115.221.44:8080/devcamp-lucky-dice/";
+    const gBASE_URL = "http://203.171.20.210:8080/devcamp-lucky-dice/";
+    const gEND_OF_ROW_COL = -1;
+    const vUTF8_TEXT_APPLICATION_HEADER = "application/json;charset=UTF-8";
+
+    //Tạo đối tượng
+    var gUserData = {
+        username: "",
+        firstname: "",
+        lastname: ""
+    };
+
+    /***REGION 2  */
+    $(document).ready(function() {
+        $("#btn-dice").click(onNemClick);
+        $("#btn-dice-history").click(onDiceHistoryClick);
+        $("#btn-present-history").click(onPresentHistoryClick);
+        $("#btn-voucher-history").click(onVoucherHistoryClick);
+    });
+
+    /*** REGION 3 - Event handlers - Vùng khai báo các hàm xử lý sự kiện */
+
+    //Hàm thực thi khi click btn Ném
+    function onNemClick() {
+        //thu thập dữ liệu
+        getData(gUserData);
+        //Validation
+        var valid = validData(gUserData);
+        //xử lý hiển thị
+        if (valid) {
+            //Request to server and display
+            callApiServerNewDice();
+        }
+    }
+
+    //Thực thi DiceHistory Click
+    function onDiceHistoryClick() {
+        //Thu thập dữ liệu
+        getData(gUserData);
+        // Kiểm tra dữ liệu có được đưa vào trường input không
+        var valid = validData(gUserData);
+        //Nếu dữ liệu đã được điền đầy đủ
+        if (valid) {
+            //Đổi màu nút
+            changeButtonColor("Dice");
+            //Xóa bảng dữ liệu hiện tại
+            clearTable();
+            //Request to server and display
+            callApiServerDiceHistory();
+        }
+    }
+
+    //Hàm thực thi sự kiện click nút voucher history
+    function onVoucherHistoryClick() {
+        //Thu thập dữ liệu
+        getData(gUserData);
+        // Kiểm tra dữ liệu có được đưa vào trường input không
+        var valid = validData(gUserData);
+        //Nếu dữ liệu đã được điền đầy đủ
+        if (valid) {
+            //Đổi màu nút
+            changeButtonColor("Voucher");
+            //Xóa bảng dữ liệu hiện tại
+            clearTable();
+            //Request to server and display
+            callApiServerVoucherHistory();
+        }
+    }
+
+    //Hàm thực thi sự kiện present history click 
+    function onPresentHistoryClick() {
+
+        getData(gUserData);
+        // Kiểm tra dữ liệu có được đưa vào trường input không
+        var valid = validData(gUserData);
+        //Nếu dữ liệu đã được điền đầy đủ
+        if (valid) {
+            //Đổi màu nút
+            changeButtonColor("Present");
+            //Xóa bảng dữ liệu hiện tại
+            clearTable();
+            //Request to server and display
+            callApiServerPresentHistory();
+        }
+
+    }
+
+    /*** REGION 4 - Common funtions - Vùng khai báo hàm dùng chung trong toàn bộ chương trình*/
+
+    //Get data
+    function getData(paramUser) {
+        paramUser.username = $("#inp-user-name").val();
+        paramUser.firstname = $("#inp-first-name").val();
+        paramUser.lastname = $("#inp-last-name").val();
+        console.log(paramUser)
+
+    }
+
+    //Valid Data input
+    function validData(paramData) {
+        if (paramData.username.trim() === "") {
+            alert("Bạn phải nhập user name ")
+            return false;
+        }
+        if (paramData.firstname.trim() === "") {
+            alert("Bạn phải nhập first name ")
+            return false;
+        }
+        if (paramData.lastname.trim() === "") {
+            alert("Bạn phải nhập last name ")
+            return false;
+        }
+        return true
+    }
+
+    //Thay đổi thông điệp notification 
+    function changeNotification(paramDice) {
+        'use strict';
+        if (paramDice === 1 || paramDice === 2 || paramDice === 3) {
+            $("#p-notification-dice").html('Chúc bạn may mắn lần sau!!!')
+        }
+
+        if (paramDice === 4 || paramDice === 5 || paramDice === 6) {
+            $("#p-notification-dice").html('Chúc mừng bạn. Hãy chơi tiếp nhé!!!')
+        }
+    }
+
+    //Thay đổi giá trị hiển thị VoucherId nhận được
+    function changeVoucherId(paramVoucher) {
+        'use strict'
+        if (paramVoucher != null) {
+            $("#p-voucher-id").html(paramVoucher.maVoucher);
+            $("#p-voucher-percent").html(paramVoucher.phanTramGiamGia + "%");
+        } else {
+            $("#p-voucher-id").html("");
+            $("#p-voucher-percent").html("");
+        }
+    }
+
+    //Thay đổi hình ảnh hiển thị mặt xúc xắc
+    function changeDice(paramDice) {
+        'use strict';
+
+        switch (paramDice) {
+            case 1:
+                $("#img-dice").attr("src", "LuckyDiceImages/1.png")
+                break;
+            case 2:
+                $("#img-dice").attr("src", "LuckyDiceImages/2.png")
+                break;
+            case 3:
+                $("#img-dice").attr("src", "LuckyDiceImages/3.png")
+                break;
+            case 4:
+                $("#img-dice").attr("src", "LuckyDiceImages/4.png")
+                break;
+            case 5:
+                $("#img-dice").attr("src", "LuckyDiceImages/5.png")
+                break;
+            case 6:
+                $("#img-dice").attr("src", "LuckyDiceImages/6.png")
+                break;
+        }
+    }
+
+    //Thay đổi hình ảnh hiển thị quà
+    function changeGift(paramObjPrize) {
+        'use strict'
+        var vTenPhanThuong = paramObjPrize;
+        console.log("Tên phần thường : " + vTenPhanThuong);
+        if (vTenPhanThuong === null) {
+            $("#img-present").attr("src", "LuckyDiceImages/no-present.jpg")
+        }
+        if (vTenPhanThuong === "Mũ") {
+            $("#img-present").attr("src", "LuckyDiceImages/hat.jpg")
+        }
+        if (vTenPhanThuong === "Ô tô") {
+            $("#img-present").attr("src", "LuckyDiceImages/car.jpg")
+        }
+        if (vTenPhanThuong === "Xe máy") {
+            $("#img-present").attr("src", "LuckyDiceImages/motobike.jpg")
+        }
+        if (vTenPhanThuong === "Áo mưa") {
+            $("#img-present").attr("src", "LuckyDiceImages/t-shirt.jpg")
+        }
+        if (vTenPhanThuong === "Sổ") {
+            $("#img-present").attr("src", "LuckyDiceImages/notebook.jpg")
+        }
+        if (vTenPhanThuong === "Bút") {
+            $("#img-present").attr("src", "LuckyDiceImages/notebook.jpg") //Không có ảnh bút nên lấy tập
+        }
+    }
+
+    // đổi thuộc tính data-is-selected phù hợp cho từng nút
+    function changeButtonColor(paramTypeHistory) {
+        debugger
+        $(".btn-primary").removeClass("btn-success")
+
+        if (paramTypeHistory === "Dice") {
+            $("#btn-dice-history").addClass("btn-success")
+        }
+        if (paramTypeHistory === "Voucher") {
+            $("#btn-voucher-history").addClass("btn-success")
+        }
+        if (paramTypeHistory === "Present") {
+            $("#btn-present-history").addClass("btn-success")
+        }
+
+    }
+
+
+    // Gọi APISERVER lấy lịch sử chơi
+    function callApiServerDiceHistory() {
+        //Gán giá trị username
+        var vDataListNameTest = gUserData.username;
+        //Tạo một request mới
+        var vXmlHttpDiceHistory = new XMLHttpRequest();
+        //Gửi một yêu cầu đén server
+        vXmlHttpDiceHistory.open("GET", gBASE_URL + "/dice-history?username=" + vDataListNameTest, true);
+        vXmlHttpDiceHistory.send();
+        vXmlHttpDiceHistory.onreadystatechange =
+            function() {
+                if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
+                    //Ghi dữ liệu phản hồi ra console.log để kiểm tra chuỗi
+                    console.log(vXmlHttpDiceHistory.responseText);
+                    //Chuyển chuỗi response sang Obj
+                    var vDiceHistoryResponseObj = JSON.parse(vXmlHttpDiceHistory.response);
+                    // hiển thị dữ liệu Obj lên console để check lại lần nữa
+                    console.log("%cIn đối tượng vDiceHistoryResponseObj:", "color: green")
+                    console.log(vDiceHistoryResponseObj);
+                    //Ghi dữ liệu vào bảng lấy thuộc tính dices 
+                    showDiceHistoryToTable(vDiceHistoryResponseObj.dices);
+
+                }
+
+            }
+    }
+
+    //Gọi APISERVER lấy giá trị Voucher history
+    function callApiServerVoucherHistory() {
+        //Gán giá trị username
+        var vDataListNameTest = gUserData.username;
+        //Tạo một request mới
+        var vXmlHttpVoucherHistory = new XMLHttpRequest();
+        //Gửi một yêu cầu đén server
+        vXmlHttpVoucherHistory.open("GET", gBASE_URL + "voucher-history?username=" + vDataListNameTest, true);
+        vXmlHttpVoucherHistory.send();
+        vXmlHttpVoucherHistory.onreadystatechange =
+            function() {
+                if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
+
+                    //Ghi dữ liệu phản hồi ra console.log để kiểm tra chuỗi
+                    console.log(vXmlHttpVoucherHistory.responseText);
+
+                    //Chuyển chuỗi response sang Obj
+                    var vVoucherHistoryResponseObj = JSON.parse(vXmlHttpVoucherHistory.response);
+
+                    // hiển thị dữ liệu Obj lên console để check lại lần nữa
+                    console.log("%cIn đối tượng vVoucherHistoryResponseObj:", "color: green")
+                    console.log(vVoucherHistoryResponseObj);
+
+                    //Xử lý dữ liệu lấy ra voucher
+                    //Tạo mảng chứa các mã voucher nhận được
+                    var gMaVoucherList = [];
+                    for (let index = 0; index < vVoucherHistoryResponseObj.vouchers.length; index++) {
+                        //Lấy thuộc tính vouchers(Obj) --> Lấy thuộc tính maVoucher 
+                        gMaVoucherList.push(vVoucherHistoryResponseObj.vouchers[index].maVoucher)
+                    }
+                    //Ghi dữ liệu vào bảng 
+                    showDiceHistoryToTable(gMaVoucherList);
+
+                }
+            }
+    }
+
+    //Gọi APISERVER lấy giá trị chơi
+    function callApiServerNewDice() {
+        var vXmlHttpDice = new XMLHttpRequest();
+        vXmlHttpDice.open("POST", gBASE_URL + "/dice", true);
+        vXmlHttpDice.setRequestHeader("Content-Type", vUTF8_TEXT_APPLICATION_HEADER);
+        vXmlHttpDice.send(JSON.stringify(gUserData)); //chuyển Json object sang string
+        vXmlHttpDice.onreadystatechange = function() {
+            if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) { //nếu trạng thái của response ready và ok
+                console.log(vXmlHttpDice.responseText);
+                // parsing to object
+                var vResponse = JSON.parse(vXmlHttpDice.responseText);
+                console.log(vResponse);
+                // get result dice
+                var vDiceReady = vResponse.dice;
+                console.log("dice result: " + vDiceReady);
+                //Xử lý hiển thị
+                changeDice(vDiceReady);
+                changeNotification(vDiceReady);
+                changeVoucherId(vResponse.voucher);
+                changeGift(vResponse.prize);
+            }
+        }
+    }
+
+    //Gọi APISERVER lấy giá trị Precent history
+    function callApiServerPresentHistory() {
+        //Gán giá trị username
+        var vDataListNameTest = gUserData.username;
+        //Tạo một request mới
+        var vXmlHttpPresentHistory = new XMLHttpRequest();
+        //Gửi một yêu cầu đén server
+        vXmlHttpPresentHistory.open("GET", gBASE_URL + "/prize-history?username=" + vDataListNameTest, true);
+        vXmlHttpPresentHistory.send();
+        vXmlHttpPresentHistory.onreadystatechange =
+            function() {
+                if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
+                    //Ghi dữ liệu phản hồi ra console.log để kiểm tra chuỗi
+                    console.log(vXmlHttpPresentHistory.responseText);
+                    //Chuyển chuỗi response sang Obj
+                    var vPresentHistoryResponseObj = JSON.parse(vXmlHttpPresentHistory.response);
+                    // hiển thị dữ liệu Obj lên console để check lại lần nữa
+                    console.log("%cIn đối tượng vPresentHistoryResponseObj:", "color: green")
+                    console.log(vPresentHistoryResponseObj);
+                    //Ghi dữ liệu vào bảng lấy thuộc tính prizes
+                    showDiceHistoryToTable(vPresentHistoryResponseObj.prizes);
+
+                }
+            }
+    }
+
+    //Xóa bảng dữ liệu
+    function clearTable() {
+        'use strict';
+        console.log("Xóa bảng dữ liệu: ");
+        //Xóa bảng dữ liệu
+        $('#history-placeholder-table>tbody>tr>td').remove();
+    }
+
+    //Hàm hiển thị dữ liệu ra bảng
+    function showDiceHistoryToTable(paramUserList) {
+        'use strict';
+        console.log("Kiểm tra dữ liệu truyền vào bảng: ");
+        console.log(paramUserList);
+        //Gán biến vTableBody cho Element có Id history-placeholder-table
+        var vTableBody = $("#history-placeholder-table").find("tbody")[0];
+
+        //Tạo vòng lặp gán tất cả giá trị trong Obj vào bảng
+        for (var bIndex = 0; bIndex < paramUserList.length; bIndex++) {
+
+            //Gán giá trị 
+            var vDataList = paramUserList[bIndex];
+
+            // tạo dòng mới cho bẳng và ghi vào các giá trị 
+            var vRow = vTableBody.insertRow(gEND_ROW_TABLE);
+
+            //Tạo các ô mới trong dòng vừa tạo ở trên
+            var vCellLuot = vRow.insertCell(gLUOT_COL);
+            var vCellKetQua = vRow.insertCell(gKET_QUA_COL);
+
+            //Gán giá trị vào các ô được tạo
+            vCellLuot.innerHTML = bIndex + 1;
+            vCellKetQua.innerHTML = vDataList;
+        }
+    }
+</script>
+<!-- Task 44.40 -->
+<!-- Tạo nhánh mới develop từ nhánh main bằng VSCode -->
+<!-- Thay đổi code, add + commit và publish nhánh lên gitlab bằng VSCode -->
+<!-- Tạo merge request từ nhánh develop vào nhánh main và thực hiện merge -->
