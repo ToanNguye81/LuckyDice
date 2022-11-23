@@ -1,14 +1,15 @@
-// Khai báo thư viện ExpressJS
-const express = require("express");
+const getRandomNumberMiddleware = (request, response, next) => {
 
-// Khai báo router app
-const router = express.Router();
+    console.log("Current time: ", new Date());
+    console.log("Request method: ", request.method);
+    next();
+}
 
-// Import diceHistory middleware
-const diceHistoryMiddleware = require("../middlewares/diceHistoryMiddleware.js");
 
-//Import diceHistory controller 
-const diceHistoryController = require("../controllers/diceHistoryController");
+module.exports = {
+    getRandomNumberMiddleware,
+}
+onst diceHistoryController = require("../controllers/diceHistoryController");
 
 router.get("/dice-histories", diceHistoryMiddleware.getAllDiceHistoryMiddleware, diceHistoryController.getAllDiceHistory)
 
@@ -17,8 +18,6 @@ router.post("/dice-histories", diceHistoryMiddleware.createDiceHistoryMiddleware
 router.get("/dice-histories/:diceHistoryId", diceHistoryMiddleware.getDiceHistoryMiddleware, diceHistoryController.getDiceHistoryById);
 
 router.put("/dice-histories/:diceHistoryId", diceHistoryMiddleware.updateDiceHistoryMiddleware, diceHistoryController.updateDiceHistoryById)
-
-// router.get("/users/:userId/dice-histories", diceHistoryMiddleware.getAllDiceHistoryMiddleware, diceHistoryController.getAllDiceHistoryOfUser);
 
 router.delete("/dice-histories/:diceHistoryId", diceHistoryMiddleware.deleteDiceHistoryMiddleware, diceHistoryController.deleteDiceHistoryById)
 
