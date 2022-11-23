@@ -8,9 +8,6 @@ const mongoose = require("mongoose");
 const port = 8000;
 
 const path = require("path");
-// const userModel = require("./app/models/userModel");
-
-
 
 // Khởi tạo app express
 const app = express();

@@ -8,5 +8,4 @@ const getRandomNumberMiddleware = (request, response, next) => {
 
 module.exports = {
     getRandomNumberMiddleware,
-
 }

@@ -1,15 +1,14 @@
-const getRandomNumberMiddleware = (request, response, next) => {
+// Khai báo thư viện ExpressJS
+const express = require("express");
 
-    console.log("Current time: ", new Date());
-    console.log("Request method: ", request.method);
-    next();
-}
+// Khai báo router app
+const router = express.Router();
 
+// Import diceHistory middleware
+const diceHistoryMiddleware = require("../middlewares/diceHistoryMiddleware.js");
 
-module.exports = {
-    getRandomNumberMiddleware,
-}
-onst diceHistoryController = require("../controllers/diceHistoryController");
+//Import diceHistory controller 
+const diceHistoryController = require("../controllers/diceHistoryController");
 
 router.get("/dice-histories", diceHistoryMiddleware.getAllDiceHistoryMiddleware, diceHistoryController.getAllDiceHistory)
 

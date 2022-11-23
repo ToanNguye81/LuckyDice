@@ -3,8 +3,6 @@ const mongoose = require("mongoose");
 
 // Import DiceHistory Model
 const diceHistoryModel = require("../models/diceHistoryModel");
-const userModel = require("../models/userModel");
-
 
 const createDiceHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
@@ -19,13 +17,6 @@ const createDiceHistory = (request, response) => {
             message: "User Id không hợp lệ"
         })
     }
-
-    // if (!(Number.isInteger(body.user) && body.user > 0 && body.user <= 5)) {
-    //     return response.status(400).json({
-    //         status: "Bad Request",
-    //         message: "Rate không hợp lệ"
-    //     })
-    // }
 
     // B3: Thao tác với cơ sở dữ liệu
     const newDiceHistory = {
@@ -47,24 +38,6 @@ const createDiceHistory = (request, response) => {
             })
         }
 
-        //     // Thêm Id của diceHistory mới vào mảng user của user đã chọn
-        //     userModel.findByIdAndUpdate(userId, {
-        //         $push: {
-        //             user: data._id
-        //         }
-        //     }, (err, updatedUser) => {
-        //         if (err) {
-        //             return response.status(500).json({
-        //                 status: "Internal server error",
-        //                 message: err.message
-        //             })
-        //         }
-
-        //         return response.status(201).json({
-        //             status: "Create DiceHistory Successfully",
-        //             data: data
-        //         })
-        //     })
     })
 }
 
@@ -113,36 +86,6 @@ const getAllDiceHistory = (request, response) => {
             data: data
         })
     })
-}
-
-const getAllDiceHistoryOfUser = (request, response) => {
-    // B1: Chuẩn bị dữ liệu
-    const userId = request.params.userId;
-
-    // B2: Validate dữ liệu
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return response.status(400).json({
-            status: "Bad Request",
-            message: "User Id không hợp lệ"
-        })
-    }
-
-    // B3: Thao tác với cơ sở dữ liệu
-    userModel.findById(userId)
-        .populate("user")
-        .exec((error, data) => {
-            if (error) {
-                return response.status(500).json({
-                    status: "Internal server error",
-                    message: error.message
-                })
-            }
-
-            return response.status(200).json({
-                status: "Get all diceHistory of user successfully",
-                data: data
-            })
-        })
 }
 
 const updateDiceHistoryById = (request, response) => {
@@ -233,7 +176,6 @@ module.exports = {
     getDiceHistoryById,
     createDiceHistory,
     getAllDiceHistory,
-    // getAllDiceHistoryOfUser,
     updateDiceHistoryById,
     deleteDiceHistoryById
 }
