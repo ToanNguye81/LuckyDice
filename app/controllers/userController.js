@@ -30,6 +30,8 @@ const createUser = (request, response) => {
     // username: String, unique, required
     // firstname: String, required
     // lastname: String, required
+    // createdAt: Date, default: Date.now()
+    // updatedAt: Date, default: Date.now()
     // }
 
     // B2: Validate dữ liệu
@@ -66,7 +68,6 @@ const createUser = (request, response) => {
         username: body.username,
         firstname: body.firstname,
         lastname: body.lastname,
-
     }
 
     userModel.create(newUser, (error, data) => {
@@ -163,8 +164,6 @@ const updateUserById = (request, response) => {
     if (body.lastname !== undefined) {
         updateUser.lastname = body.lastname
     }
-
-
 
     userModel.findByIdAndUpdate(userId, updateUser, (error, data) => {
         if (error) {

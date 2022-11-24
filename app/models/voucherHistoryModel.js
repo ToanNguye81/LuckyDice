@@ -4,10 +4,10 @@ const mongoose = require("mongoose")
 //Khai báo class Schema
 const Schema = mongoose.Schema
 
-//Khởi tạo instance diceHitorySchema 
-const diceHistorySchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    dice: { type: Number, required: true },
+//Khởi tạo instance voucherHitorySchema 
+const voucherHistorySchema = new Schema({
+    user: { type: Schema.Types.ObjectID, ref: "User", required: true },
+    voucher: { type: Schema.Types.ObjectID, ref: "Voucher", required: true },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
 }, {
@@ -16,4 +16,4 @@ const diceHistorySchema = new Schema({
 })
 
 // Biên dịch một Book Model từ bookscheme
-module.exports = mongoose.model("DiceHistory", diceHistorySchema)
+module.exports = mongoose.model("VoucherHistory", voucherHistorySchema)
