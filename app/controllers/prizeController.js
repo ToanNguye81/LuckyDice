@@ -1,248 +1,174 @@
+// Import thư viện Mongoose
 const mongoose = require("mongoose");
 
-const diceHistoryModel = require("../model/diceHistoryModel");
-const prizeHistoryModel = require("../model/prizeHistoryModel");
-const prizeModel = require("../model/prizeModel");
-const userModel = require("../model/userModel");
-const voucherHistoryModel = require("../model/voucherHistoryModel");
-const voucherModel = require("../model/voucherModel");
+// Import Module Prize Model
+const prizeModel = require("../models/prizeModel");
 
-const diceHandler = (request, response) => {
+const getAllPrize = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    let username = request.body.username;
-    let firstname = request.body.firstname;
-    let lastname = request.body.lastname;
-
-    // Random 1 giá trị xúc xắc bất kỳ
-    let dice = Math.floor(Math.random() * 6 + 1);
-
-    // B2: Validate dữ liệu từ request body
-    if (!username) {
-        return response.status(400).json({
-            status: "Error 400: Bad request",
-            message: "Username is required"
-        })
-    }
-
-    if (!firstname) {
-        return response.status(400).json({
-            status: "Error 400: Bad request",
-            message: "Firstname is required"
-        })
-    }
-
-    if (!lastname) {
-        return response.status(400).json({
-            status: "Error 400: Bad request",
-            message: "Lastname is required"
-        })
-    }
-
-    // Sử dụng userModel tìm kiếm bằng username
-    userModel.findOne({
-        username: username
-    }, (errorFindUser, userExist) => {
-        if (errorFindUser) {
+    // B2: Validate dữ liệu
+    // B3: Gọi Model tạo dữ liệ
+    prizeModel.find((error, data) => {
+        if (error) {
             return response.status(500).json({
-                status: "Error 500: Internal server error",
-                message: errorFindUser.message
+                status: "Internal server error",
+                message: error.message
             })
-        } else {
-            if (!userExist) {
-                // Nếu user không tồn tại trong hệ thống
-                // Tạo user mới
-                userModel.create({
-                    _id: mongoose.Types.ObjectId(),
-                    username: username,
-                    firstname: firstname,
-                    lastname: lastname
-                }, (errCreateUser, userCreated) => {
-                    if (errCreateUser) {
-                        return response.status(500).json({
-                            status: "Error 500: Internal server error",
-                            message: errCreateUser.message
-                        })
-                    } else {
-                        // Xúc xắc 1 lần, lưu lịch sử vào Dice History
-                        diceHistoryModel.create({
-                            _id: mongoose.Types.ObjectId(),
-                            user: userCreated._id,
-                            dice: dice
-                        }, (errorDiceHistoryCreate, diceHistoryCreated) => {
-                            if (errorDiceHistoryCreate) {
-                                return response.status(500).json({
-                                    status: "Error 500: Internal server error",
-                                    message: errorDiceHistoryCreate.message
-                                })
-                            } else {
-                                if (dice < 3) {
-                                    // Nếu dice < 3, không nhận được voucher và prize gì cả
-                                    return response.status(200).json({
-                                        dice: dice,
-                                        prize: null,
-                                        voucher: null
-                                    })
-                                } else {
-                                    // Nếu dice > 3, thực hiện lấy random một giá trị voucher bất kỳ trong hệ thống
-                                    voucherModel.count().exec((errorCountVoucher, countVoucher) => {
-                                        let randomVoucher = Math.floor(Math.random * countVoucher);
-
-                                        voucherModel.findOne().skip(randomVoucher).exec((errorFindVoucher, findVoucher) => {
-                                            // Lưu voucher History
-                                            voucherHistoryModel.create({
-                                                _id: mongoose.Types.ObjectId(),
-                                                user: userCreated._id,
-                                                voucher: findVoucher._id
-                                            }, (errorCreateVoucherHistory, voucherHistoryCreated) => {
-                                                if (errorCreateVoucherHistory) {
-                                                    return response.status(500).json({
-                                                        status: "Error 500: Internal server error",
-                                                        message: errorCreateVoucherHistory.message
-                                                    })
-                                                } else {
-                                                    if (errorCreateVoucherHistory) {
-                                                        return response.status(500).json({
-                                                            status: "Error 500: Internal server error",
-                                                            message: errorCreateVoucherHistory.message
-                                                        })
-                                                    } else {
-                                                        // User mới không có prize
-                                                        return response.status(200).json({
-                                                            dice: dice,
-                                                            prize: null,
-                                                            voucher: findVoucher
-                                                        })
-                                                    }
-                                                }
-                                            })
-                                        })
-                                    })
-                                }
-                            }
-                        })
-                    }
-                })
-            } else {
-                // Nếu user đã tồn tại trong hệ thống
-                // Xúc xắc 1 lần, lưu lịch sử vào Dice History
-                diceHistoryModel.create({
-                    _id: mongoose.Types.ObjectId(),
-                    user: userExist._id,
-                    dice: dice
-                }, (errorDiceHistoryCreate, diceHistoryCreated) => {
-                    if (errorDiceHistoryCreate) {
-                        return response.status(500).json({
-                            status: "Error 500: Internal server error",
-                            message: errorDiceHistoryCreate.message
-                        })
-                    } else {
-                        if (dice < 3) {
-                            // Nếu dice < 3, không nhận được voucher và prize gì cả
-                            return response.status(200).json({
-                                dice: dice,
-                                prize: null,
-                                voucher: null
-                            })
-                        } else {
-                            // Nếu dice > 3, thực hiện lấy random một giá trị voucher bất kỳ trong hệ thống
-                            voucherModel.count().exec((errorCountVoucher, countVoucher) => {
-                                let randomVoucher = Math.floor(Math.random * countVoucher);
-
-                                voucherModel.findOne().skip(randomVoucher).exec((errorFindVoucher, findVoucher) => {
-                                    // Lưu voucher History
-                                    voucherHistoryModel.create({
-                                        _id: mongoose.Types.ObjectId(),
-                                        user: userExist._id,
-                                        voucher: findVoucher._id
-                                    }, (errorCreateVoucherHistory, voucherHistoryCreated) => {
-                                        if (errorCreateVoucherHistory) {
-                                            return response.status(500).json({
-                                                status: "Error 500: Internal server error",
-                                                message: errorCreateVoucherHistory.message
-                                            })
-                                        } else {
-                                            // Lấy 3 lần gieo xúc xắc gần nhất của user
-                                            diceHistoryModel
-                                                .find()
-                                                .sort({
-                                                    _id: -1
-                                                })
-                                                .limit(3)
-                                                .exec((errorFindLast3DiceHistory, last3DiceHistory) => {
-                                                    if (errorFindLast3DiceHistory) {
-                                                        return response.status(500).json({
-                                                            status: "Error 500: Internal server error",
-                                                            message: errorFindLast3DiceHistory.message
-                                                        })
-                                                    } else {
-                                                        // Nếu chưa ném đủ 3 lần, không nhận được prize
-                                                        if (last3DiceHistory.length < 3) {
-                                                            return response.status(200).json({
-                                                                dice: dice,
-                                                                prize: null,
-                                                                voucher: findVoucher
-                                                            })
-                                                        } else {
-                                                            console.log(last3DiceHistory)
-                                                                // Kiểm tra 3 dice gần nhất
-                                                            let checkHavePrize = true;
-                                                            last3DiceHistory.forEach(diceHistory => {
-                                                                if (diceHistory.dice < 3) {
-                                                                    // Nếu 3 lần gần nhất có 1 lần xúc xắc nhỏ hơn 3 => không nhận được giải thưởng
-                                                                    checkHavePrize = false;
-                                                                }
-                                                            });
-
-                                                            if (!checkHavePrize) {
-                                                                return response.status(200).json({
-                                                                    dice: dice,
-                                                                    prize: null,
-                                                                    voucher: findVoucher
-                                                                })
-                                                            } else {
-                                                                // Nếu đủ điều kiện nhận giải thưởng, tiến hành lấy random 1 prize trong prize Model
-                                                                prizeModel.count().exec((errorCountPrize, countPrize) => {
-                                                                    let randomPrize = Math.floor(Math.random * countPrize);
-
-                                                                    prizeModel.findOne().skip(randomPrize).exec((errorFindPrize, findPrize) => {
-                                                                        // Lưu prize History
-                                                                        prizeHistoryModel.create({
-                                                                            _id: mongoose.Types.ObjectId(),
-                                                                            user: userExist._id,
-                                                                            prize: findPrize._id
-                                                                        }, (errorCreatePrizeHistory, voucherPrizeCreated) => {
-                                                                            if (errorCreatePrizeHistory) {
-                                                                                return response.status(500).json({
-                                                                                    status: "Error 500: Internal server error",
-                                                                                    message: errorCreatePrizeHistory.message
-                                                                                })
-                                                                            } else {
-                                                                                // Trả về kết quả cuối cùng
-                                                                                return response.status(200).json({
-                                                                                    dice: dice,
-                                                                                    prize: findPrize,
-                                                                                    voucher: findVoucher
-                                                                                })
-                                                                            }
-                                                                        })
-                                                                    })
-                                                                })
-                                                            }
-                                                        }
-                                                    }
-                                                })
-                                        }
-                                    })
-                                })
-                            })
-                        }
-                    }
-                })
-            }
         }
+
+        return response.status(200).json({
+            status: "Get all Prize successfully",
+            data: data
+        })
+    })
+}
+
+const createPrize = (request, response) => {
+    // B1: Chuẩn bị dữ liệu
+    const body = request.body;
+    // {
+    // name: String, unique, required
+    // }
+
+    // B2: Validate dữ liệu
+    // Kiểm tra name có hợp lệ hay không
+    if (!body.name) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "name không hợp lệ"
+        })
+    }
+
+    // B3: Gọi Model tạo dữ liệu
+    const newPrize = {
+        _id: mongoose.Types.ObjectId(),
+        name: body.name,
+        description: body.description,
+        createdAt: body.createdAt,
+        updatedAt: body.updatedAt,
+    }
+
+    prizeModel.create(newPrize, (error, data) => {
+        if (error) {
+            return response.status(500).json({
+                status: "Internal server error",
+                message: error.message
+            })
+        }
+
+        return response.status(201).json({
+            status: "Create Prize successfully",
+            data: data
+        })
+    })
+}
+
+const getPrizeById = (request, response) => {
+    // B1: Chuẩn bị dữ liệu
+    const prizeId = request.params.prizeId;
+
+    // B2: Validate dữ liệu
+    if (!mongoose.Types.ObjectId.isValid(prizeId)) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "prizeID không hợp lệ"
+        })
+    }
+
+    // B3: Gọi Model tạo dữ liệu
+    prizeModel.findById(prizeId, (error, data) => {
+        if (error) {
+            return response.status(500).json({
+                status: "Internal server error",
+                message: error.message
+            })
+        }
+
+        return response.status(200).json({
+            status: "Get detail Prize successfully",
+            data: data
+        })
+    })
+}
+
+const updatePrizeById = (request, response) => {
+    // B1: Chuẩn bị dữ liệu
+    const prizeId = request.params.prizeId;
+    const body = request.body;
+
+    // B2: Validate dữ liệu
+    if (!mongoose.Types.ObjectId.isValid(prizeId)) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "prizeID không hợp lệ"
+        })
+    }
+
+    if (body.name !== undefined && body.name.trim() === "") {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "name không hợp lệ"
+        })
+    }
+
+
+    // B3: Gọi Model update dữ liệu
+    const updatePrize = {}
+
+    if (body.name !== undefined) {
+        updatePrize.name = body.name
+    }
+
+    if (body.description !== undefined) {
+        updatePrize.description = body.description
+    }
+
+    prizeModel.findByIdAndUpdate(prizeId, updatePrize, (error, data) => {
+        if (error) {
+            return response.status(500).json({
+                status: "Internal server error",
+                message: error.message
+            })
+        }
+
+        return response.status(200).json({
+            status: "Update Prize successfully",
+            data: data
+        })
+    })
+}
+
+const deletePrizeById = (request, response) => {
+    // B1: Chuẩn bị dữ liệu
+    const prizeId = request.params.prizeId;
+
+    // B2: Validate dữ liệu
+    if (!mongoose.Types.ObjectId.isValid(prizeId)) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "prizeID không hợp lệ"
+        })
+    }
+
+    // B3: Gọi Model tạo dữ liệu
+    prizeModel.findByIdAndDelete(prizeId, (error, data) => {
+        if (error) {
+            return response.status(500).json({
+                status: "Internal server error",
+                message: error.message
+            })
+        }
+
+        return response.status(200).json({
+            status: "Delete Prize successfully"
+        })
     })
 }
 
 module.exports = {
-    diceHandler
+    getAllPrize,
+    createPrize,
+    getPrizeById,
+    updatePrizeById,
+    deletePrizeById
 }
