@@ -6,12 +6,23 @@ const voucherHistoryModel = require("../models/voucherHistoryModel");
 
 const createVoucherHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const userId = request.body.userId;
-    const voucherResult = getNewVoucher();
-    console.log(voucherResult);
+    const user = request.body.user;
+    const voucher = request.body.voucher;
+
+    // const voucherResult = getNewVoucher();
+    console.log(user);
+    console.log(voucher);
+
 
     // B2: Validate dữ liệu
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!mongoose.Types.ObjectId.isValid(user)) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "User Id không hợp lệ"
+        })
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(voucher)) {
         return response.status(400).json({
             status: "Bad Request",
             message: "User Id không hợp lệ"
@@ -21,8 +32,8 @@ const createVoucherHistory = (request, response) => {
     // B3: Thao tác với cơ sở dữ liệu
     const newVoucherHistory = {
         _id: mongoose.Types.ObjectId(),
-        user: userId,
-        voucher: voucherResult
+        user: user,
+        voucher: voucher
     }
 
     voucherHistoryModel.create(newVoucherHistory, (error, data) => {
@@ -43,7 +54,7 @@ const createVoucherHistory = (request, response) => {
 
 const getVoucherHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const voucherHistoryId = request.params.voucherHistoryId;
+    const voucherHistoryId = request.params.historyId;
 
     // B2: Validate dữ liệu
     if (!mongoose.Types.ObjectId.isValid(voucherHistoryId)) {
@@ -90,7 +101,7 @@ const getAllVoucherHistory = (request, response) => {
 
 const updateVoucherHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const voucherHistoryId = request.params.voucherHistoryId;
+    const voucherHistoryId = request.params.historyId;
     const body = request.body;
 
     // B2: Validate dữ liệu
@@ -101,17 +112,17 @@ const updateVoucherHistoryById = (request, response) => {
         })
     }
 
-    if (body.voucher !== undefined && !(Number.isInteger(body.voucher) && body.voucher > 0 && body.voucher <= 6)) {
-        return response.status(400).json({
-            status: "Bad Request",
-            message: "Voucher không hợp lệ"
-        })
-    }
-
     if (body.user !== undefined && (!mongoose.Types.ObjectId.isValid(body.user))) {
         return response.status(400).json({
             status: "Bad Request",
             message: "user không hợp lệ"
+        })
+    }
+
+    if (body.voucher !== undefined && (!mongoose.Types.ObjectId.isValid(body.voucher))) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "Voucher không hợp lệ"
         })
     }
 
@@ -143,7 +154,7 @@ const updateVoucherHistoryById = (request, response) => {
 
 const deleteVoucherHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const voucherHistoryId = request.params.voucherHistoryId;
+    const voucherHistoryId = request.params.historyId;
 
     // B2: Validate dữ liệu
     if (!mongoose.Types.ObjectId.isValid(voucherHistoryId)) {
@@ -168,14 +179,10 @@ const deleteVoucherHistoryById = (request, response) => {
     })
 }
 
-const getNewVoucher = () => {
-    return Math.floor(6 * Math.random()) + 1;;
-}
-
 module.exports = {
-    getVoucherHistoryById,
-    createVoucherHistory,
-    getAllVoucherHistory,
-    updateVoucherHistoryById,
-    deleteVoucherHistoryById
+    getVoucherHistoryById: getVoucherHistoryById,
+    createVoucherHistory: createVoucherHistory,
+    getAllVoucherHistory: getAllVoucherHistory,
+    updateVoucherHistoryById: updateVoucherHistoryById,
+    deleteVoucherHistoryById: deleteVoucherHistoryById
 }

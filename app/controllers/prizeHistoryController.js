@@ -6,12 +6,23 @@ const prizeHistoryModel = require("../models/prizeHistoryModel");
 
 const createPrizeHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const userId = request.body.userId;
-    const prizeResult = getNewPrize();
-    console.log(prizeResult);
+    const user = request.body.user;
+    const prize = request.body.prize;
+
+    // const prizeResult = getNewPrize();
+    console.log(user);
+    console.log(prize);
+
 
     // B2: Validate dữ liệu
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!mongoose.Types.ObjectId.isValid(user)) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "User Id không hợp lệ"
+        })
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(prize)) {
         return response.status(400).json({
             status: "Bad Request",
             message: "User Id không hợp lệ"
@@ -21,8 +32,8 @@ const createPrizeHistory = (request, response) => {
     // B3: Thao tác với cơ sở dữ liệu
     const newPrizeHistory = {
         _id: mongoose.Types.ObjectId(),
-        user: userId,
-        prize: prizeResult
+        user: user,
+        prize: prize
     }
 
     prizeHistoryModel.create(newPrizeHistory, (error, data) => {
@@ -43,7 +54,7 @@ const createPrizeHistory = (request, response) => {
 
 const getPrizeHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const prizeHistoryId = request.params.prizeHistoryId;
+    const prizeHistoryId = request.params.historyId;
 
     // B2: Validate dữ liệu
     if (!mongoose.Types.ObjectId.isValid(prizeHistoryId)) {
@@ -90,7 +101,7 @@ const getAllPrizeHistory = (request, response) => {
 
 const updatePrizeHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const prizeHistoryId = request.params.prizeHistoryId;
+    const prizeHistoryId = request.params.historyId;
     const body = request.body;
 
     // B2: Validate dữ liệu
@@ -101,17 +112,17 @@ const updatePrizeHistoryById = (request, response) => {
         })
     }
 
-    if (body.prize !== undefined && !(Number.isInteger(body.prize) && body.prize > 0 && body.prize <= 6)) {
-        return response.status(400).json({
-            status: "Bad Request",
-            message: "Prize không hợp lệ"
-        })
-    }
-
     if (body.user !== undefined && (!mongoose.Types.ObjectId.isValid(body.user))) {
         return response.status(400).json({
             status: "Bad Request",
             message: "user không hợp lệ"
+        })
+    }
+
+    if (body.prize !== undefined && (!mongoose.Types.ObjectId.isValid(body.prize))) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "Prize không hợp lệ"
         })
     }
 
@@ -143,7 +154,7 @@ const updatePrizeHistoryById = (request, response) => {
 
 const deletePrizeHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const prizeHistoryId = request.params.prizeHistoryId;
+    const prizeHistoryId = request.params.historyId;
 
     // B2: Validate dữ liệu
     if (!mongoose.Types.ObjectId.isValid(prizeHistoryId)) {
@@ -166,10 +177,6 @@ const deletePrizeHistoryById = (request, response) => {
             status: "Delete User successfully"
         })
     })
-}
-
-const getNewPrize = () => {
-    return Math.floor(6 * Math.random()) + 1;;
 }
 
 module.exports = {

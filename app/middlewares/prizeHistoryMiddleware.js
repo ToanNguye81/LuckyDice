@@ -24,9 +24,9 @@ const deletePrizeHistoryMiddleware = (request, response, next) => {
 }
 
 module.exports = {
-    getAllPrizeHistoryMiddleware,
-    createPrizeHistoryMiddleware,
-    getPrizeHistoryMiddleware,
-    updatePrizeHistoryMiddleware,
-    deletePrizeHistoryMiddleware
+    getAllPrizeHistoryMiddleware: getAllPrizeHistoryMiddleware,
+    createPrizeHistoryMiddleware: createPrizeHistoryMiddleware,
+    getPrizeHistoryMiddleware: getPrizeHistoryMiddleware,
+    updatePrizeHistoryMiddleware: updatePrizeHistoryMiddleware,
+    deletePrizeHistoryMiddleware: deletePrizeHistoryMiddleware
 }

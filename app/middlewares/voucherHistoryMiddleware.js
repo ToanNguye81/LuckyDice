@@ -24,9 +24,9 @@ const deleteVoucherHistoryMiddleware = (request, response, next) => {
 }
 
 module.exports = {
-    getAllVoucherHistoryMiddleware,
-    createVoucherHistoryMiddleware,
-    getVoucherHistoryMiddleware,
-    updateVoucherHistoryMiddleware,
-    deleteVoucherHistoryMiddleware
+    getAllVoucherHistoryMiddleware: getAllVoucherHistoryMiddleware,
+    createVoucherHistoryMiddleware: createVoucherHistoryMiddleware,
+    getVoucherHistoryMiddleware: getVoucherHistoryMiddleware,
+    updateVoucherHistoryMiddleware: updateVoucherHistoryMiddleware,
+    deleteVoucherHistoryMiddleware: deleteVoucherHistoryMiddleware
 }

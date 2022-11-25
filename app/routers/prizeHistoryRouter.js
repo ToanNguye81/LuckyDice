@@ -5,19 +5,31 @@ const express = require("express");
 const router = express.Router();
 
 // Import prizeHistory middleware
-const prizeHistoryMiddleware = require("../middlewares/prizeHistoryMiddleware.js");
+const {
+    getAllPrizeHistoryMiddleware,
+    createPrizeHistoryMiddleware,
+    getPrizeHistoryMiddleware,
+    updatePrizeHistoryMiddleware,
+    deletePrizeHistoryMiddleware
+} = require("../middlewares/prizeHistoryMiddleware.js");
 
 //Import prizeHistory controller 
-const prizeHistoryController = require("../controllers/prizeHistoryController");
+const {
+    getAllPrizeHistory,
+    createPrizeHistory,
+    getPrizeHistoryById,
+    updatePrizeHistoryById,
+    deletePrizeHistoryById
+} = require("../controllers/prizeHistoryController");
 
-router.get("/prize-histories", prizeHistoryMiddleware.getAllPrizeHistoryMiddleware, prizeHistoryController.getAllPrizeHistory)
+router.get("/prize-histories", getAllPrizeHistoryMiddleware, getAllPrizeHistory)
 
-router.post("/prize-histories", prizeHistoryMiddleware.createPrizeHistoryMiddleware, prizeHistoryController.createPrizeHistory);
+router.post("/prize-histories", createPrizeHistoryMiddleware, createPrizeHistory);
 
-router.get("/prize-histories/:prizeHistoryId", prizeHistoryMiddleware.getPrizeHistoryMiddleware, prizeHistoryController.getPrizeHistoryById);
+router.get("/prize-histories/:historyId", getPrizeHistoryMiddleware, getPrizeHistoryById);
 
-router.put("/prize-histories/:prizeHistoryId", prizeHistoryMiddleware.updatePrizeHistoryMiddleware, prizeHistoryController.updatePrizeHistoryById)
+router.put("/prize-histories/:historyId", updatePrizeHistoryMiddleware, updatePrizeHistoryById)
 
-router.delete("/prize-histories/:prizeHistoryId", prizeHistoryMiddleware.deletePrizeHistoryMiddleware, prizeHistoryController.deletePrizeHistoryById)
+router.delete("/prize-histories/:historyId", deletePrizeHistoryMiddleware, deletePrizeHistoryById)
 
 module.exports = router;

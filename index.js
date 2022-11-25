@@ -22,18 +22,28 @@ app.use(express.json());
 // Khai báo router
 const randomNumberRouter = require("./app/routers/randomNumberRouter");
 app.use("/api", randomNumberRouter);
+
 const userRouter = require("./app/routers/userRouter");
 app.use("/api", userRouter);
+
 const voucherRouter = require("./app/routers/voucherRouter");
 app.use("/api", voucherRouter);
+
 const prizeRouter = require("./app/routers/prizeRouter");
 app.use("/api", prizeRouter);
+
 const prizeHistoryRouter = require("./app/routers/prizeHistoryRouter");
 app.use("/api", prizeHistoryRouter);
+
 const voucherHistoryRouter = require("./app/routers/voucherHistoryRouter");
 app.use("/api", voucherHistoryRouter);
+
 const diceHistoryRouter = require("./app/routers/diceHistoryRouter");
 app.use("/api", diceHistoryRouter);
+
+const diceRouter = require("./app/routers/diceRouter");
+app.use("/devcamp-lucky-dice/dice ", diceRouter);
+
 
 //Tao csdl tren mongodb
 mongoose.connect("mongodb://127.0.0.1:27017/CRUD_DiceProject", (error) => {

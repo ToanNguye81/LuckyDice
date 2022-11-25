@@ -5,19 +5,31 @@ const express = require("express");
 const router = express.Router();
 
 // Import voucherHistory middleware
-const voucherHistoryMiddleware = require("../middlewares/voucherHistoryMiddleware.js");
+const {
+    getAllVoucherHistoryMiddleware,
+    createVoucherHistoryMiddleware,
+    getVoucherHistoryMiddleware,
+    updateVoucherHistoryMiddleware,
+    deleteVoucherHistoryMiddleware
+} = require("../middlewares/voucherHistoryMiddleware.js");
 
 //Import voucherHistory controller 
-const voucherHistoryController = require("../controllers/voucherHistoryController");
+const {
+    getVoucherHistoryById,
+    createVoucherHistory,
+    getAllVoucherHistory,
+    updateVoucherHistoryById,
+    deleteVoucherHistoryById
+} = require("../controllers/voucherHistoryController");
 
-router.get("/voucher-histories", voucherHistoryMiddleware.getAllVoucherHistoryMiddleware, voucherHistoryController.getAllVoucherHistory)
+router.get("/voucher-histories", getAllVoucherHistoryMiddleware, getAllVoucherHistory)
 
-router.post("/voucher-histories", voucherHistoryMiddleware.createVoucherHistoryMiddleware, voucherHistoryController.createVoucherHistory);
+router.post("/voucher-histories", createVoucherHistoryMiddleware, createVoucherHistory);
 
-router.get("/voucher-histories/:voucherHistoryId", voucherHistoryMiddleware.getVoucherHistoryMiddleware, voucherHistoryController.getVoucherHistoryById);
+router.get("/voucher-histories/:historyId", getVoucherHistoryMiddleware, getVoucherHistoryById);
 
-router.put("/voucher-histories/:voucherHistoryId", voucherHistoryMiddleware.updateVoucherHistoryMiddleware, voucherHistoryController.updateVoucherHistoryById)
+router.put("/voucher-histories/:historyId", updateVoucherHistoryMiddleware, updateVoucherHistoryById)
 
-router.delete("/voucher-histories/:voucherHistoryId", voucherHistoryMiddleware.deleteVoucherHistoryMiddleware, voucherHistoryController.deleteVoucherHistoryById)
+router.delete("/voucher-histories/:historyId", deleteVoucherHistoryMiddleware, deleteVoucherHistoryById)
 
 module.exports = router;
