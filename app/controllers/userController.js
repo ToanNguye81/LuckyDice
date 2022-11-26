@@ -59,9 +59,6 @@ const createUser = (request, response) => {
         })
     }
 
-    //Kiểm tra phone có hợp lệ không
-
-
     // B3: Gọi Model tạo dữ liệu
     const newUser = {
         _id: mongoose.Types.ObjectId(),
@@ -126,43 +123,33 @@ const updateUserById = (request, response) => {
         })
     }
 
-    if (body.username !== undefined && body.username.trim() === "") {
+    // Kiểm tra userName
+    if (!body.userName) {
         return response.status(400).json({
-            status: "Bad Request",
-            message: "username không hợp lệ"
-        })
+            "status": "Error 400: bad request",
+            "message": "userName is not valid!"
+        });
     }
-
-    if (body.firstname !== undefined && body.firstname.trim() === "") {
+    // Kiểm tra firstName
+    if (!body.firstName) {
         return response.status(400).json({
-            status: "Bad Request",
-            message: "firstname không hợp lệ"
-        })
+            "status": "Error 400: bad request",
+            "message": "firstName is not valid!"
+        });
     }
-
-    if (body.lastname !== undefined && body.lastname.trim() === "") {
+    // Kiểm tra lastName
+    if (!body.lastName) {
         return response.status(400).json({
-            status: "Bad Request",
-            message: "lastname không hợp lệ"
-        })
+            "status": "Error 400: bad request",
+            "message": "lastName is not valid!"
+        });
     }
-
-
-
 
     // B3: Gọi Model update dữ liệu
-    const updateUser = {}
-
-    if (body.username !== undefined) {
-        updateUser.username = body.username
-    }
-
-    if (body.firstname !== undefined) {
-        updateUser.firstname = body.firstname
-    }
-
-    if (body.lastname !== undefined) {
-        updateUser.lastname = body.lastname
+    const updateUser = {
+        userName: body.userName,
+        firstName: body.firstName,
+        lastName: body.lastName
     }
 
     userModel.findByIdAndUpdate(userId, updateUser, (error, data) => {

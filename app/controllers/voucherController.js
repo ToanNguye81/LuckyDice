@@ -47,6 +47,14 @@ const createVoucher = (request, response) => {
         })
     }
 
+    // Kiểm tra note
+    if (!body.note) {
+        return response.status(400).json({
+            "status": "Error 400: bad request",
+            "message": "note is not valid!"
+        });
+    }
+
     // B3: Gọi Model tạo dữ liệu
     const newVoucher = {
         _id: mongoose.Types.ObjectId(),
@@ -118,11 +126,12 @@ const updateVoucherById = (request, response) => {
         })
     }
 
-    if (!(isNaN(body.discount) && body.discount > 0)) {
+    // Kiểm tra discount
+    if (!body.discount) {
         return response.status(400).json({
-            status: "Error 400: Bad Request",
-            message: "discount is not valid"
-        })
+            "status": "Error 400: bad request",
+            "message": "discount is not valid!"
+        });
     }
 
     // B3: Gọi Model update dữ liệu

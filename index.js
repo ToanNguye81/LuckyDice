@@ -21,29 +21,28 @@ app.use(express.json());
 
 // Khai báo router
 const randomNumberRouter = require("./app/routers/randomNumberRouter");
-app.use("/api", randomNumberRouter);
+app.use("/devcamp-lucky-dice", randomNumberRouter);
 
 const userRouter = require("./app/routers/userRouter");
-app.use("/api", userRouter);
+app.use("/devcamp-lucky-dice", userRouter);
 
 const voucherRouter = require("./app/routers/voucherRouter");
-app.use("/api", voucherRouter);
+app.use("/devcamp-lucky-dice", voucherRouter);
 
 const prizeRouter = require("./app/routers/prizeRouter");
-app.use("/api", prizeRouter);
+app.use("/devcamp-lucky-dice", prizeRouter);
 
 const prizeHistoryRouter = require("./app/routers/prizeHistoryRouter");
-app.use("/api", prizeHistoryRouter);
+app.use("/devcamp-lucky-dice", prizeHistoryRouter);
 
 const voucherHistoryRouter = require("./app/routers/voucherHistoryRouter");
-app.use("/api", voucherHistoryRouter);
+app.use("/devcamp-lucky-dice", voucherHistoryRouter);
 
 const diceHistoryRouter = require("./app/routers/diceHistoryRouter");
-app.use("/api", diceHistoryRouter);
+app.use("/devcamp-lucky-dice", diceHistoryRouter);
 
 const diceRouter = require("./app/routers/diceRouter");
-app.use("/devcamp-lucky-dice/dice ", diceRouter);
-
+app.use("/devcamp-lucky-dice", diceRouter);
 
 //Tao csdl tren mongodb
 mongoose.connect("mongodb://127.0.0.1:27017/CRUD_DiceProject", (error) => {
@@ -51,7 +50,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/CRUD_DiceProject", (error) => {
     console.log("Connect MongoDB successfully!");
 })
 
-// Khai báo APi dạng Get "/" sẽ chạy vào đây
+// Khai báo APi dạng Get "/devcamp-lucky-dice" sẽ chạy vào đây
 app.get("/", (request, response) => {
     console.log(__dirname);
     //Chạy file HTML với đường dẫn / cần dòng 2

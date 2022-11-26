@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 
 // Import DiceHistory Model
 const diceHistoryModel = require("../models/diceHistoryModel");
+const userModel = require("../models/diceHistoryModel");
+
 
 const createDiceHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
@@ -71,21 +73,34 @@ const getDiceHistoryById = (request, response) => {
 
 const getAllDiceHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    // B2: Validate dữ liệu
-    // B3: Gọi Model tạo dữ liệu
-    diceHistoryModel.find((error, data) => {
-        if (error) {
-            return response.status(500).json({
-                status: "Internal server error",
-                message: error.message
-            })
-        }
+    //thu thập dữ liệu trên front-end
+    // let userId = request.query.user;
 
-        return response.status(200).json({
-            status: "Get all diceHistory successfully",
-            data: data
+    let userId = request.user;
+
+    // //tạo ra điều kiện lọc
+    let condition = {};
+
+    if (userId) {
+        condition.user = userId;
+    }
+    // B2: Validate dữ liệu
+    //Nếu userQuery tồn tại thì tìm dữ liệu trong userModel theo user
+    diceHistoryModel
+        .find(condition)
+        .exec((error, data) => {
+            if (error) {
+                return response.status(500).json({
+                    status: "Internal server error",
+                    message: error.message
+                })
+            }
+            return response.status(200).json({
+                status: "Get all dice histories successfully",
+                data: data
+            })
         })
-    })
+
 }
 
 const updateDiceHistoryById = (request, response) => {
@@ -108,23 +123,8 @@ const updateDiceHistoryById = (request, response) => {
         })
     }
 
-    if (body.user !== undefined && (!mongoose.Types.ObjectId.isValid(body.user))) {
-        return response.status(400).json({
-            status: "Bad Request",
-            message: "user không hợp lệ"
-        })
-    }
-
     // B3: Gọi Model tạo dữ liệu
-    const updateDiceHistory = {}
-
-    if (body.user !== undefined) {
-        updateDiceHistory.user = body.user
-    }
-
-    if (body.dice !== undefined) {
-        updateDiceHistory.dice = body.dice
-    }
+    const updateDiceHistory = { dice: body.dice }
 
     diceHistoryModel.findByIdAndUpdate(diceHistoryId, updateDiceHistory, (error, data) => {
         if (error) {
@@ -161,9 +161,9 @@ const deleteDiceHistoryById = (request, response) => {
                 message: error.message
             })
         }
-
         return response.status(200).json({
-            status: "Delete User successfully"
+            status: "Delete User successfully",
+            "data": data
         })
     })
 }
@@ -172,8 +172,47 @@ const getNewDice = () => {
     return Math.floor(6 * Math.random()) + 1;;
 }
 
+//function find dice history by username
+const getDiceHistoryByUsername = (request, response) => {
+    //B1: chuẩn bị dữ liệu
+    const username = request.query.username;
+
+    // Sử dụng userModel tìm kiếm bằng username
+    userModel.findOne({
+        username: username
+    }, (errorFindUser, userExist) => {
+        if (errorFindUser) {
+            return response.status(500).json({
+                status: "Error 500: Internal server error",
+                message: errorFindUser.message
+            })
+        } else {
+            console.log("==========================")
+            console.log(userExist)
+            getAllDiceHistory(userExist)
+        }
+    })
+
+    // //nếu không truyền vào query username
+    // diceHistoryModel.find((error, data) => {
+    //     if (error) {
+    //         return response.status(500).json({
+    //             status: "Internal server error",
+    //             message: error.message
+    //         })
+    //     }
+    //     return response.status(200).json({
+    //         status: "Get all dice histories successfully",
+    //         data: data
+    //     })
+    // });
+    // console.log(username)
+}
+
+
 module.exports = {
     getDiceHistoryById,
+    getDiceHistoryByUsername,
     createDiceHistory,
     getAllDiceHistory,
     updateDiceHistoryById,

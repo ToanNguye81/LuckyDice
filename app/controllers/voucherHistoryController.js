@@ -6,34 +6,34 @@ const voucherHistoryModel = require("../models/voucherHistoryModel");
 
 const createVoucherHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const user = request.body.user;
-    const voucher = request.body.voucher;
+    const userId = request.body.userId;
+    const voucherId = request.body.voucherId;
 
-    // const voucherResult = getNewVoucher();
-    console.log(user);
-    console.log(voucher);
+    // const voucherIdResult = getNewVoucher();
+    console.log(userId);
+    console.log(voucherId);
 
 
     // B2: Validate dữ liệu
-    if (!mongoose.Types.ObjectId.isValid(user)) {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
         return response.status(400).json({
             status: "Bad Request",
             message: "User Id không hợp lệ"
         })
     }
 
-    if (!mongoose.Types.ObjectId.isValid(voucher)) {
+    if (!mongoose.Types.ObjectId.isValid(voucherId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "User Id không hợp lệ"
+            message: "voucherId không hợp lệ"
         })
     }
 
     // B3: Thao tác với cơ sở dữ liệu
     const newVoucherHistory = {
         _id: mongoose.Types.ObjectId(),
-        user: user,
-        voucher: voucher
+        user: userId,
+        voucher: voucherId
     }
 
     voucherHistoryModel.create(newVoucherHistory, (error, data) => {
@@ -82,21 +82,31 @@ const getVoucherHistoryById = (request, response) => {
 
 const getAllVoucherHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
+    let userId = req.query.user;
+
+    //tạo ra điều kiện lọc
+    let condition = {};
+
+    if (userId) {
+        condition.user = userId;
+    }
     // B2: Validate dữ liệu
     // B3: Gọi Model tạo dữ liệu
-    voucherHistoryModel.find((error, data) => {
-        if (error) {
-            return response.status(500).json({
-                status: "Internal server error",
-                message: error.message
-            })
-        }
+    voucherHistoryModel
+        .find(condition)
+        .exec((error, data) => {
+            if (error) {
+                return response.status(500).json({
+                    status: "Internal server error",
+                    message: error.message
+                })
+            }
 
-        return response.status(200).json({
-            status: "Get all voucherHistory successfully",
-            data: data
+            return response.status(200).json({
+                status: "Get all voucherHistory successfully",
+                data: data
+            })
         })
-    })
 }
 
 const updateVoucherHistoryById = (request, response) => {
@@ -112,14 +122,14 @@ const updateVoucherHistoryById = (request, response) => {
         })
     }
 
-    if (body.user !== undefined && (!mongoose.Types.ObjectId.isValid(body.user))) {
+    if (body.userId !== undefined && (!mongoose.Types.ObjectId.isValid(body.userId))) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "user không hợp lệ"
+            message: "userId không hợp lệ"
         })
     }
 
-    if (body.voucher !== undefined && (!mongoose.Types.ObjectId.isValid(body.voucher))) {
+    if (body.voucherId !== undefined && (!mongoose.Types.ObjectId.isValid(body.voucherId))) {
         return response.status(400).json({
             status: "Bad Request",
             message: "Voucher không hợp lệ"
@@ -129,12 +139,12 @@ const updateVoucherHistoryById = (request, response) => {
     // B3: Gọi Model tạo dữ liệu
     const updateVoucherHistory = {}
 
-    if (body.user !== undefined) {
-        updateVoucherHistory.user = body.user
+    if (body.userId !== undefined) {
+        updateVoucherHistory.user = body.userId
     }
 
-    if (body.voucher !== undefined) {
-        updateVoucherHistory.voucher = body.voucher
+    if (body.voucherId !== undefined) {
+        updateVoucherHistory.voucher = body.voucherId
     }
 
     voucherHistoryModel.findByIdAndUpdate(voucherHistoryId, updateVoucherHistory, (error, data) => {
@@ -160,7 +170,7 @@ const deleteVoucherHistoryById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(voucherHistoryId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "voucherHistory không hợp lệ"
+            message: "historyId không hợp lệ"
         })
     }
 

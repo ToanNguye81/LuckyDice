@@ -6,23 +6,23 @@ const prizeHistoryModel = require("../models/prizeHistoryModel");
 
 const createPrizeHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    const user = request.body.user;
-    const prize = request.body.prize;
+    const userId = request.body.userId;
+    const prizeId = request.body.prizeId;
 
     // const prizeResult = getNewPrize();
-    console.log(user);
-    console.log(prize);
+    console.log(userId);
+    console.log(prizeId);
 
 
     // B2: Validate dữ liệu
-    if (!mongoose.Types.ObjectId.isValid(user)) {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
         return response.status(400).json({
             status: "Bad Request",
             message: "User Id không hợp lệ"
         })
     }
 
-    if (!mongoose.Types.ObjectId.isValid(prize)) {
+    if (!mongoose.Types.ObjectId.isValid(prizeId)) {
         return response.status(400).json({
             status: "Bad Request",
             message: "User Id không hợp lệ"
@@ -32,8 +32,8 @@ const createPrizeHistory = (request, response) => {
     // B3: Thao tác với cơ sở dữ liệu
     const newPrizeHistory = {
         _id: mongoose.Types.ObjectId(),
-        user: user,
-        prize: prize
+        user: userId,
+        prize: prizeId
     }
 
     prizeHistoryModel.create(newPrizeHistory, (error, data) => {
@@ -82,21 +82,32 @@ const getPrizeHistoryById = (request, response) => {
 
 const getAllPrizeHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
+    //thu thập dữ liệu trên front-end
+    let userId = req.query.user;
+
+    //tạo ra điều kiện lọc
+    let condition = {};
+
+    if (userId) {
+        condition.user = userId;
+    }
     // B2: Validate dữ liệu
     // B3: Gọi Model tạo dữ liệu
-    prizeHistoryModel.find((error, data) => {
-        if (error) {
-            return response.status(500).json({
-                status: "Internal server error",
-                message: error.message
-            })
-        }
-
-        return response.status(200).json({
-            status: "Get all prizeHistory successfully",
-            data: data
+    prizeHistoryModel
+        .find(condition)
+        .exec((err, data) => {
+            if (err) {
+                return request.status(500).json({
+                    status: "Error 500: internal server error",
+                    message: err.message
+                })
+            } else {
+                return request.status(201).json({
+                    status: "Load all prize history successfully!",
+                    data: data
+                })
+            }
         })
-    })
 }
 
 const updatePrizeHistoryById = (request, response) => {
@@ -112,14 +123,14 @@ const updatePrizeHistoryById = (request, response) => {
         })
     }
 
-    if (body.user !== undefined && (!mongoose.Types.ObjectId.isValid(body.user))) {
+    if (body.userId !== undefined && (!mongoose.Types.ObjectId.isValid(body.userId))) {
         return response.status(400).json({
             status: "Bad Request",
             message: "user không hợp lệ"
         })
     }
 
-    if (body.prize !== undefined && (!mongoose.Types.ObjectId.isValid(body.prize))) {
+    if (body.prizeId !== undefined && (!mongoose.Types.ObjectId.isValid(body.prizeId))) {
         return response.status(400).json({
             status: "Bad Request",
             message: "Prize không hợp lệ"
@@ -129,12 +140,12 @@ const updatePrizeHistoryById = (request, response) => {
     // B3: Gọi Model tạo dữ liệu
     const updatePrizeHistory = {}
 
-    if (body.user !== undefined) {
-        updatePrizeHistory.user = body.user
+    if (body.userId !== undefined) {
+        updatePrizeHistory.user = body.userId
     }
 
-    if (body.prize !== undefined) {
-        updatePrizeHistory.prize = body.prize
+    if (body.prizeId !== undefined) {
+        updatePrizeHistory.prize = body.prizeId
     }
 
     prizeHistoryModel.findByIdAndUpdate(prizeHistoryId, updatePrizeHistory, (error, data) => {

@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const diceHistoryModel = require("../model/diceHistoryModel");
-const prizeHistoryModel = require("../model/prizeHistoryModel");
-const prizeModel = require("../model/prizeModel");
-const userModel = require("../model/userModel");
-const voucherHistoryModel = require("../model/voucherHistoryModel");
-const voucherModel = require("../model/voucherModel");
+const diceHistoryModel = require("../models/diceHistoryModel");
+const prizeHistoryModel = require("../models/prizeHistoryModel");
+const prizeModel = require("../models/prizeModel");
+const userModel = require("../models/userModel");
+const voucherHistoryModel = require("../models/voucherHistoryModel");
+const voucherModel = require("../models/voucherModel");
 
 const diceHandler = (request, response) => {
     // B1: Chuẩn bị dữ liệu

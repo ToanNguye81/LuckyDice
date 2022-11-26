@@ -20,4 +20,9 @@ router.put("/dice-histories/:diceHistoryId", diceHistoryMiddleware.updateDiceHis
 
 router.delete("/dice-histories/:diceHistoryId", diceHistoryMiddleware.deleteDiceHistoryMiddleware, diceHistoryController.deleteDiceHistoryById)
 
+router.get("/dice-history", diceHistoryController.getDiceHistoryByUsername)
+
+
+
+
 module.exports = router;

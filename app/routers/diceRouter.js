@@ -1,12 +1,14 @@
-// Khai báo thư viện ExpressJS
-const express = require("express");
+// Import thu viện express
+const express = require('express');
 
 // Khai báo router app
 const router = express.Router();
 
-// Import newDice controller
-const { diceHandler } = require("../controllers/diceController")
+// Import diceController
+const diceController = require("../controllers/diceController");
+// Import prize middleware
+const prizeMiddleware = require("../middlewares/prizeMiddleware");
 
-router.post("/devcamp-lucky-dice/dice", diceHandler)
+router.post("/dice", prizeMiddleware.createPrizeMiddleware, diceController.diceHandler);
 
 module.exports = router;

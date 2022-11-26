@@ -166,7 +166,9 @@
     const gREQUEST_READY_STATUS_FINISH_AND_OK = 4;
     //const gBASE_URL = "http://42.115.221.44:8080/devcamp-register-java-api/users";
     //const gBASE_URL = "http://42.115.221.44:8080/devcamp-lucky-dice/";
-    const gBASE_URL = "http://203.171.20.210:8080/devcamp-lucky-dice/";
+    // const gBASE_URL = "http://203.171.20.210:8080/devcamp-lucky-dice/";
+    const gBASE_URL = "/devcamp-lucky-dice";
+
     const gEND_OF_ROW_COL = -1;
     const vUTF8_TEXT_APPLICATION_HEADER = "application/json;charset=UTF-8";
 
@@ -389,6 +391,7 @@
             function() {
                 if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
                     //Ghi dữ liệu phản hồi ra console.log để kiểm tra chuỗi
+                    debugger;
                     console.log(vXmlHttpDiceHistory.responseText);
                     //Chuyển chuỗi response sang Obj
                     var vDiceHistoryResponseObj = JSON.parse(vXmlHttpDiceHistory.response);

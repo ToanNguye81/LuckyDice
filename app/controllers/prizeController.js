@@ -39,13 +39,18 @@ const createPrize = (request, response) => {
         })
     }
 
+    if (!body.description) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "Description is not valid!"
+        })
+    }
+
     // B3: Gọi Model tạo dữ liệu
     const newPrize = {
         _id: mongoose.Types.ObjectId(),
         name: body.name,
-        description: body.description,
-        createdAt: body.createdAt,
-        updatedAt: body.updatedAt,
+        description: body.description
     }
 
     prizeModel.create(newPrize, (error, data) => {
@@ -104,23 +109,25 @@ const updatePrizeById = (request, response) => {
         })
     }
 
-    if (body.name !== undefined && body.name.trim() === "") {
+    if (!body.name) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "name không hợp lệ"
+            message: "Name is not valid!"
+        })
+    }
+
+    if (!body.description) {
+        return response.status(400).json({
+            status: "Bad Request",
+            message: "Description is not valid!"
         })
     }
 
 
     // B3: Gọi Model update dữ liệu
-    const updatePrize = {}
-
-    if (body.name !== undefined) {
-        updatePrize.name = body.name
-    }
-
-    if (body.description !== undefined) {
-        updatePrize.description = body.description
+    const updatePrize = {
+        name: body.name,
+        description: body.description
     }
 
     prizeModel.findByIdAndUpdate(prizeId, updatePrize, (error, data) => {
