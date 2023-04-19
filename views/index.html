@@ -164,9 +164,6 @@
     // Gán các hằng số cần dùng gọi sever
     const gREQUEST_STATUS_OK = 200
     const gREQUEST_READY_STATUS_FINISH_AND_OK = 4;
-    //const gBASE_URL = "http://42.115.221.44:8080/devcamp-register-java-api/users";
-    //const gBASE_URL = "http://42.115.221.44:8080/devcamp-lucky-dice/";
-    // const gBASE_URL = "http://203.171.20.210:8080/devcamp-lucky-dice/";
     const gBASE_URL = "/devcamp-lucky-dice";
 
     const gEND_OF_ROW_COL = -1;
@@ -450,7 +447,8 @@
         vXmlHttpDice.setRequestHeader("Content-Type", vUTF8_TEXT_APPLICATION_HEADER);
         vXmlHttpDice.send(JSON.stringify(gUserData)); //chuyển Json object sang string
         vXmlHttpDice.onreadystatechange = function() {
-            if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) { //nếu trạng thái của response ready và ok
+            if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
+                 //nếu trạng thái của response ready và ok
                 console.log(vXmlHttpDice.responseText);
                 // parsing to object
                 var vResponse = JSON.parse(vXmlHttpDice.responseText);
@@ -528,7 +526,3 @@
         }
     }
 </script>
-<!-- Task 44.40 -->
-<!-- Tạo nhánh mới develop từ nhánh main bằng VSCode -->
-<!-- Thay đổi code, add + commit và publish nhánh lên gitlab bằng VSCode -->
-<!-- Tạo merge request từ nhánh develop vào nhánh main và thực hiện merge -->

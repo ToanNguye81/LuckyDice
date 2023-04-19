@@ -192,21 +192,6 @@ const getDiceHistoryByUsername = (request, response) => {
             getAllDiceHistory(userExist)
         }
     })
-
-    // //nếu không truyền vào query username
-    // diceHistoryModel.find((error, data) => {
-    //     if (error) {
-    //         return response.status(500).json({
-    //             status: "Internal server error",
-    //             message: error.message
-    //         })
-    //     }
-    //     return response.status(200).json({
-    //         status: "Get all dice histories successfully",
-    //         data: data
-    //     })
-    // });
-    // console.log(username)
 }
 
 

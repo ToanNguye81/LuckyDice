@@ -9,11 +9,6 @@ const createVoucherHistory = (request, response) => {
     const userId = request.body.userId;
     const voucherId = request.body.voucherId;
 
-    // const voucherIdResult = getNewVoucher();
-    console.log(userId);
-    console.log(voucherId);
-
-
     // B2: Validate dữ liệu
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return response.status(400).json({

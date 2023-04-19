@@ -26,9 +26,6 @@ const getAllPrize = (request, response) => {
 const createPrize = (request, response) => {
     // B1: Chuẩn bị dữ liệu
     const body = request.body;
-    // {
-    // name: String, unique, required
-    // }
 
     // B2: Validate dữ liệu
     // Kiểm tra name có hợp lệ hay không

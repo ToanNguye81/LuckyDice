@@ -26,13 +26,6 @@ const getAllUser = (request, response) => {
 const createUser = (request, response) => {
     // B1: Chuẩn bị dữ liệu
     const body = request.body;
-    // {
-    // username: String, unique, required
-    // firstname: String, required
-    // lastname: String, required
-    // createdAt: Date, default: Date.now()
-    // updatedAt: Date, default: Date.now()
-    // }
 
     // B2: Validate dữ liệu
     // Kiểm tra username có hợp lệ hay không

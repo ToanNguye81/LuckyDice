@@ -9,9 +9,8 @@ const voucherModel = require("../models/voucherModel");
 
 const diceHandler = (request, response) => {
     // B1: Chuẩn bị dữ liệu
-    let username = request.body.username;
-    let firstname = request.body.firstname;
-    let lastname = request.body.lastname;
+    const { username, firstname, lastname } = request.body;
+    console.log({username, firstname, lastname})
 
     // Random 1 giá trị xúc xắc bất kỳ
     let dice = Math.floor(Math.random() * 6 + 1);
@@ -43,6 +42,7 @@ const diceHandler = (request, response) => {
         username: username
     }, (errorFindUser, userExist) => {
         if (errorFindUser) {
+            console.log("error FindUser")
             return response.status(500).json({
                 status: "Error 500: Internal server error",
                 message: errorFindUser.message
@@ -58,6 +58,8 @@ const diceHandler = (request, response) => {
                     lastname: lastname
                 }, (errCreateUser, userCreated) => {
                     if (errCreateUser) {
+                        console.log("err Create User")
+
                         return response.status(500).json({
                             status: "Error 500: Internal server error",
                             message: errCreateUser.message
@@ -70,6 +72,7 @@ const diceHandler = (request, response) => {
                             dice: dice
                         }, (errorDiceHistoryCreate, diceHistoryCreated) => {
                             if (errorDiceHistoryCreate) {
+                                console.log("error DiceHistory Create")
                                 return response.status(500).json({
                                     status: "Error 500: Internal server error",
                                     message: errorDiceHistoryCreate.message
@@ -147,7 +150,6 @@ const diceHandler = (request, response) => {
                             // Nếu dice > 3, thực hiện lấy random một giá trị voucher bất kỳ trong hệ thống
                             voucherModel.count().exec((errorCountVoucher, countVoucher) => {
                                 let randomVoucher = Math.floor(Math.random * countVoucher);
-
                                 voucherModel.findOne().skip(randomVoucher).exec((errorFindVoucher, findVoucher) => {
                                     // Lưu voucher History
                                     voucherHistoryModel.create({
@@ -184,7 +186,7 @@ const diceHandler = (request, response) => {
                                                             })
                                                         } else {
                                                             console.log(last3DiceHistory)
-                                                                // Kiểm tra 3 dice gần nhất
+                                                            // Kiểm tra 3 dice gần nhất
                                                             let checkHavePrize = true;
                                                             last3DiceHistory.forEach(diceHistory => {
                                                                 if (diceHistory.dice < 3) {

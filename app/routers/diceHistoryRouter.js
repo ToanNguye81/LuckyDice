@@ -22,7 +22,4 @@ router.delete("/dice-histories/:diceHistoryId", diceHistoryMiddleware.deleteDice
 
 router.get("/dice-history", diceHistoryController.getDiceHistoryByUsername)
 
-
-
-
 module.exports = router;

@@ -4,10 +4,6 @@ const express = require("express");
 // Khai báo thư viện Mongoose
 const mongoose = require("mongoose");
 
-// // Import DiceHistory Model
-// const prizeModel = require("./app/models/prizeModel");
-// const voucherModel = require("./app/models/voucherModel");
-
 // Khai báo cổng chạy app 
 const port = 8000;
 

@@ -5,8 +5,6 @@ const mongoose = require("mongoose");
 const voucherModel = require("../models/voucherModel");
 
 const getAllVoucher = (request, response) => {
-    // B1: Chuẩn bị dữ liệu
-    // B2: Validate dữ liệu
     // B3: Gọi Model tạo dữ liệ
     voucherModel.find((error, data) => {
         if (error) {
@@ -25,10 +23,6 @@ const getAllVoucher = (request, response) => {
 const createVoucher = (request, response) => {
     // B1: Chuẩn bị dữ liệu
     const body = request.body;
-    // {
-    // code: String, unique, required
-    // discount: String, required
-    // }
 
     // B2: Validate dữ liệu
     // Kiểm tra code có hợp lệ hay không
