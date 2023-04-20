@@ -295,8 +295,8 @@
     function changeVoucherId(paramVoucher) {
         'use strict'
         if (paramVoucher != null) {
-            $("#p-voucher-id").html(paramVoucher.maVoucher);
-            $("#p-voucher-percent").html(paramVoucher.phanTramGiamGia + "%");
+            $("#p-voucher-id").html(paramVoucher.code);
+            $("#p-voucher-percent").html(paramVoucher.discount + "%");
         } else {
             $("#p-voucher-id").html("");
             $("#p-voucher-percent").html("");
@@ -337,7 +337,7 @@
         if (vTenPhanThuong === null) {
             $("#img-present").attr("src", "LuckyDiceImages/no-present.jpg")
         }
-        if (vTenPhanThuong === "Mũ") {
+        if (vTenPhanThuong === "mũ") {
             $("#img-present").attr("src", "LuckyDiceImages/hat.jpg")
         }
         if (vTenPhanThuong === "Ô tô") {
@@ -346,14 +346,11 @@
         if (vTenPhanThuong === "Xe máy") {
             $("#img-present").attr("src", "LuckyDiceImages/motobike.jpg")
         }
-        if (vTenPhanThuong === "Áo mưa") {
+        if (vTenPhanThuong === "áo") {
             $("#img-present").attr("src", "LuckyDiceImages/t-shirt.jpg")
         }
-        if (vTenPhanThuong === "Sổ") {
+        if (vTenPhanThuong === "Sách") {
             $("#img-present").attr("src", "LuckyDiceImages/notebook.jpg")
-        }
-        if (vTenPhanThuong === "Bút") {
-            $("#img-present").attr("src", "LuckyDiceImages/notebook.jpg") //Không có ảnh bút nên lấy tập
         }
     }
 
