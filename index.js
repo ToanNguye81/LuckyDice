@@ -39,13 +39,15 @@ app.get("/", (request, response) => {
 //Để hiển thị ảnh cần thêm middleware static vào express
 app.use(express.static(__dirname + "/views"))
 
-app.use("/lucky-dice", userRouter);
-app.use("/lucky-dice", voucherRouter);
-app.use("/lucky-dice", prizeRouter);
-app.use("/lucky-dice", prizeHistoryRouter);
-app.use("/lucky-dice", voucherHistoryRouter);
-app.use("/lucky-dice", diceHistoryRouter);
-app.use("/lucky-dice", diceRouter);
+app.use("/lucky-dice",
+    userRouter,
+    voucherRouter,
+    prizeRouter,
+    prizeHistoryRouter,
+    voucherHistoryRouter,
+    diceHistoryRouter,
+    diceRouter);
+
 
 
 // Chạy app trên cổng

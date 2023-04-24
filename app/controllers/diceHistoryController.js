@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 // Import DiceHistory Model
 const diceHistoryModel = require("../models/diceHistoryModel");
-const userModel = require("../models/diceHistoryModel");
+const userModel = require("../models/userModel");
 
 
 const createDiceHistory = (request, response) => {
@@ -173,25 +173,34 @@ const getNewDice = () => {
 }
 
 //function find dice history by userName
-const getDiceHistoryByUsername = (request, response) => {
+const getDiceHistoryByUsername = async (request, response) => {
     //B1: chuẩn bị dữ liệu
     const userName = request.query.userName;
 
     // Sử dụng userModel tìm kiếm bằng userName
-    userModel.findOne({
-        userName: userName
-    }, (errorFindUser, userExist) => {
-        if (errorFindUser) {
-            return response.status(500).json({
-                status: "Error 500: Internal server error",
-                message: errorFindUser.message
+    try {
+        const findUser = await userModel.findOne({ userName: userName }).exec()
+        
+        if (!findUser) {
+            return response.status(404).json({
+                status: `User ${userName} not found`,
+                data: null
             })
-        } else {
-            console.log("==========================")
-            console.log(userExist)
-            getAllDiceHistory(userExist)
         }
-    })
+
+        const findDiceHistory = await diceHistoryModel.find({ user: findUser._id }).exec()
+        const diceArray = findDiceHistory.map(item => item.dice);
+        return response.status(200).json({
+            status: `Get all dice of ${userName} success`,
+            data: diceArray
+        })
+
+    } catch (error) {
+        return response.status(500).json({
+            status: "Internal server error",
+            message: error.message
+        })
+    }
 }
 
 

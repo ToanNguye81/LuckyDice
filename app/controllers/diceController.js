@@ -92,6 +92,7 @@ const diceHandler = async (request, response) => {
             or:if the user has less than 3 dice history
             => not get prize and return response */
             if (diceArray.length < 3 || diceArray.some(dice => dice < 3)) {
+                //B4: Send response 
                 return response.status(200).json({
                     dice: dice,
                     voucher: voucherCreated.discount,
@@ -109,7 +110,8 @@ const diceHandler = async (request, response) => {
                 prize: prizeCreated._id,
             })
         }
-
+        
+        //B4: Send response 
         return response.status(200).json({
             dice: dice,
             voucher: voucherCreated ? voucherCreated.discount : null,

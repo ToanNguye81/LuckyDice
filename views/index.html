@@ -296,7 +296,7 @@
         'use strict'
         if (paramVoucher != null) {
             $("#p-voucher-id").html(paramVoucher.code);
-            $("#p-voucher-percent").html(paramVoucher.discount + "%");
+            $("#p-voucher-percent").html(paramVoucher + "%");
         } else {
             $("#p-voucher-id").html("");
             $("#p-voucher-percent").html("");
@@ -393,8 +393,7 @@
                     console.log("%cIn đối tượng vDiceHistoryResponseObj:", "color: green")
                     console.log(vDiceHistoryResponseObj);
                     //Ghi dữ liệu vào bảng lấy thuộc tính dices 
-                    showDiceHistoryToTable(vDiceHistoryResponseObj.dices);
-
+                    showDiceHistoryToTable(vDiceHistoryResponseObj.data);
                 }
 
             }
