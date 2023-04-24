@@ -28,36 +28,36 @@ const createUser = (request, response) => {
     const body = request.body;
 
     // B2: Validate dữ liệu
-    // Kiểm tra username có hợp lệ hay không
-    if (!body.username) {
+    // Kiểm tra userName có hợp lệ hay không
+    if (!body.userName) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "username không hợp lệ"
+            message: "userName không hợp lệ"
         })
     }
 
-    //Kiểm tra firstname có hợp lệ không
-    if (!body.firstname) {
+    //Kiểm tra firstName có hợp lệ không
+    if (!body.firstName) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "firstname không hợp lệ"
+            message: "firstName không hợp lệ"
         })
     }
 
-    //Kiểm tra lastname có hợp lệ không
-    if (!body.lastname) {
+    //Kiểm tra lastName có hợp lệ không
+    if (!body.lastName) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "lastname không hợp lệ"
+            message: "lastName không hợp lệ"
         })
     }
 
     // B3: Gọi Model tạo dữ liệu
     const newUser = {
         _id: mongoose.Types.ObjectId(),
-        username: body.username,
-        firstname: body.firstname,
-        lastname: body.lastname,
+        userName: body.userName,
+        firstName: body.firstName,
+        lastName: body.lastName,
     }
 
     userModel.create(newUser, (error, data) => {
@@ -83,7 +83,7 @@ const getUserById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "userID không hợp lệ"
+            message: "userId không hợp lệ"
         })
     }
 
@@ -112,7 +112,7 @@ const updateUserById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "userID không hợp lệ"
+            message: "userId không hợp lệ"
         })
     }
 
@@ -168,7 +168,7 @@ const deleteUserById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "userID không hợp lệ"
+            message: "userId không hợp lệ"
         })
     }
 

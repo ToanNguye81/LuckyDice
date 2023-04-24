@@ -172,14 +172,14 @@ const getNewDice = () => {
     return Math.floor(6 * Math.random()) + 1;;
 }
 
-//function find dice history by username
+//function find dice history by userName
 const getDiceHistoryByUsername = (request, response) => {
     //B1: chuẩn bị dữ liệu
-    const username = request.query.username;
+    const userName = request.query.userName;
 
-    // Sử dụng userModel tìm kiếm bằng username
+    // Sử dụng userModel tìm kiếm bằng userName
     userModel.findOne({
-        username: username
+        userName: userName
     }, (errorFindUser, userExist) => {
         if (errorFindUser) {
             return response.status(500).json({

@@ -6,8 +6,8 @@ const Schema = mongoose.Schema
 
 //Khởi tạo instance prizeHitorySchema 
 const prizeHistorySchema = new Schema({
-    user: { type: Schema.Types.ObjectID, ref: "User", required: true },
-    prize: { type: Schema.Types.ObjectID, ref: "Prize", required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    prize: { type: Schema.Types.ObjectId, ref: "Prize", required: true },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
 }, {

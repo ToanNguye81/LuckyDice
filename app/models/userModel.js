@@ -6,22 +6,11 @@ const Schema = mongoose.Schema
 
 //Khởi tạo instance userSchema 
 const userSchema = new Schema({
-    username: { type: String, unique: true, required: true },
-    firstname: { type: String, required: true },
-    lastname: { type: String, required: true },
+    userName: { type: String, unique: true, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
-
-    dicehistory: [{
-        type: mongoose.Types.ObjectId,
-        ref: "DiceHistory"
-    }],
-    prizehistory: [{
-        type: mongoose.Types.ObjectId,
-        ref: "PrizeHistory"
-    }]
-
-
 }, {
     //Lưu dấu bảng ghi được cập nhật vào thời gian nào
     timestamps: true

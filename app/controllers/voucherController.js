@@ -80,7 +80,7 @@ const getVoucherById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(voucherId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "voucherID không hợp lệ"
+            message: "voucherId không hợp lệ"
         })
     }
 
@@ -109,7 +109,7 @@ const updateVoucherById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(voucherId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "voucherID không hợp lệ"
+            message: "voucherId không hợp lệ"
         })
     }
 
@@ -165,7 +165,7 @@ const deleteVoucherById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(voucherId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "voucherID không hợp lệ"
+            message: "voucherId không hợp lệ"
         })
     }
     // B3: Gọi Model tạo dữ liệu

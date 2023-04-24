@@ -73,7 +73,7 @@ const getPrizeById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(prizeId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "prizeID không hợp lệ"
+            message: "prizeId không hợp lệ"
         })
     }
 
@@ -102,7 +102,7 @@ const updatePrizeById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(prizeId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "prizeID không hợp lệ"
+            message: "prizeId không hợp lệ"
         })
     }
 
@@ -150,7 +150,7 @@ const deletePrizeById = (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(prizeId)) {
         return response.status(400).json({
             status: "Bad Request",
-            message: "prizeID không hợp lệ"
+            message: "prizeId không hợp lệ"
         })
     }
 

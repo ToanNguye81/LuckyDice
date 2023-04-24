@@ -6,9 +6,9 @@ const router = express.Router();
 
 // Import diceController
 const diceController = require("../controllers/diceController");
-// Import prize middleware
-const prizeMiddleware = require("../middlewares/prizeMiddleware");
+// Import dice middleware
+const diceMiddleware = require("../middlewares/diceMiddleware");
 
-router.post("/dice", prizeMiddleware.createPrizeMiddleware, diceController.diceHandler);
+router.post("/dice", diceMiddleware.getDiceMiddleware, diceController.diceHandler);
 
 module.exports = router;
