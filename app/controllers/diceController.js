@@ -73,11 +73,15 @@ const diceHandler = async (request, response) => {
             let countVoucher = await voucherModel.countDocuments(); //Count voucher total in database
             let randomVoucher = Math.floor(Math.random() * countVoucher);
             voucherCreated = await voucherModel.findOne().skip(randomVoucher);
+            console.log(voucherCreated)
 
             // Create voucher History with user._id
             await voucherHistoryModel.create({
                 user: userExist._id,
-                voucher: voucherCreated._id,
+                voucher: {
+                    code: voucherCreated.code,
+                    discount: voucherCreated.discount
+                },
             })
 
             // Check latest 3 dice of User
@@ -107,10 +111,10 @@ const diceHandler = async (request, response) => {
 
             await prizeHistoryModel.create({
                 user: userExist._id,
-                prize: prizeCreated._id,
+                prize: prizeCreated.name,
             })
         }
-        
+
         //B4: Send response 
         return response.status(200).json({
             dice: dice,

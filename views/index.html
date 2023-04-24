@@ -107,9 +107,12 @@
         <div class="form-group">
             <div class="row text-center">
                 <div class="col-12 ">
-                    <input id="btn-dice-history" class="btn btn-primary button-width w-25" value="Dice History" type="button">
-                    <input id="btn-voucher-history" class="btn btn-primary button-width w-25" value="Voucher History" type="button">
-                    <input id="btn-present-history" class="btn btn-primary button-width w-25" value="Present History" type="button">
+                    <input id="btn-dice-history" class="btn btn-primary button-width w-25" value="Dice History"
+                        type="button">
+                    <input id="btn-voucher-history" class="btn btn-primary button-width w-25" value="Voucher History"
+                        type="button">
+                    <input id="btn-present-history" class="btn btn-primary button-width w-25" value="Present History"
+                        type="button">
                 </div>
             </div>
         </div>
@@ -177,7 +180,7 @@
     };
 
     /***REGION 2  */
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#btn-dice").click(onNemClick);
         $("#btn-dice-history").click(onDiceHistoryClick);
         $("#btn-present-history").click(onPresentHistoryClick);
@@ -382,7 +385,7 @@
         vXmlHttpDiceHistory.open("GET", gBASE_URL + "/dice-history?userName=" + vDataListNameTest, true);
         vXmlHttpDiceHistory.send();
         vXmlHttpDiceHistory.onreadystatechange =
-            function() {
+            function () {
                 if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
                     //Ghi dữ liệu phản hồi ra console.log để kiểm tra chuỗi
                     debugger;
@@ -406,10 +409,10 @@
         //Tạo một request mới
         var vXmlHttpVoucherHistory = new XMLHttpRequest();
         //Gửi một yêu cầu đén server
-        vXmlHttpVoucherHistory.open("GET", gBASE_URL + "voucher-history?userName=" + vDataListNameTest, true);
+        vXmlHttpVoucherHistory.open("GET", gBASE_URL + "/voucher-history?userName=" + vDataListNameTest, true);
         vXmlHttpVoucherHistory.send();
         vXmlHttpVoucherHistory.onreadystatechange =
-            function() {
+            function () {
                 if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
 
                     //Ghi dữ liệu phản hồi ra console.log để kiểm tra chuỗi
@@ -425,9 +428,9 @@
                     //Xử lý dữ liệu lấy ra voucher
                     //Tạo mảng chứa các mã voucher nhận được
                     var gMaVoucherList = [];
-                    for (let index = 0; index < vVoucherHistoryResponseObj.vouchers.length; index++) {
-                        //Lấy thuộc tính vouchers(Obj) --> Lấy thuộc tính maVoucher 
-                        gMaVoucherList.push(vVoucherHistoryResponseObj.vouchers[index].maVoucher)
+                    for (let index = 0; index < vVoucherHistoryResponseObj.data.length; index++) {
+                        //Lấy thuộc tính vouchers(Obj) --> Lấy thuộc tính code 
+                        gMaVoucherList.push(vVoucherHistoryResponseObj.data[index].discount)
                     }
                     //Ghi dữ liệu vào bảng 
                     showDiceHistoryToTable(gMaVoucherList);
@@ -442,9 +445,9 @@
         vXmlHttpDice.open("POST", gBASE_URL + "/dice", true);
         vXmlHttpDice.setRequestHeader("Content-Type", vUTF8_TEXT_APPLICATION_HEADER);
         vXmlHttpDice.send(JSON.stringify(gUserData)); //chuyển Json object sang string
-        vXmlHttpDice.onreadystatechange = function() {
+        vXmlHttpDice.onreadystatechange = function () {
             if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
-                 //nếu trạng thái của response ready và ok
+                //nếu trạng thái của response ready và ok
                 console.log(vXmlHttpDice.responseText);
                 // parsing to object
                 var vResponse = JSON.parse(vXmlHttpDice.responseText);
@@ -471,7 +474,7 @@
         vXmlHttpPresentHistory.open("GET", gBASE_URL + "/prize-history?userName=" + vDataListNameTest, true);
         vXmlHttpPresentHistory.send();
         vXmlHttpPresentHistory.onreadystatechange =
-            function() {
+            function () {
                 if (this.readyState == gREQUEST_READY_STATUS_FINISH_AND_OK && this.status == gREQUEST_STATUS_OK) {
                     //Ghi dữ liệu phản hồi ra console.log để kiểm tra chuỗi
                     console.log(vXmlHttpPresentHistory.responseText);
@@ -481,7 +484,7 @@
                     console.log("%cIn đối tượng vPresentHistoryResponseObj:", "color: green")
                     console.log(vPresentHistoryResponseObj);
                     //Ghi dữ liệu vào bảng lấy thuộc tính prizes
-                    showDiceHistoryToTable(vPresentHistoryResponseObj.prizes);
+                    showDiceHistoryToTable(vPresentHistoryResponseObj.data);
 
                 }
             }

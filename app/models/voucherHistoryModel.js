@@ -7,7 +7,7 @@ const Schema = mongoose.Schema
 //Khởi tạo instance voucherHitorySchema 
 const voucherHistorySchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    voucher: { type: Schema.Types.ObjectId, ref: "Voucher", required: true },
+    voucher: { type: Object, ref: "Voucher", required: true },
     createdAt: { type: Date, default: Date.now() },
     updatedAt: { type: Date, default: Date.now() },
 }, {

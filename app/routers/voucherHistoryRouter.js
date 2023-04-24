@@ -22,7 +22,7 @@ const {
     deleteVoucherHistoryById
 } = require("../controllers/voucherHistoryController");
 
-router.get("/voucher-histories", getAllVoucherHistoryMiddleware, getAllVoucherHistory)
+router.get("/voucher-history", getAllVoucherHistoryMiddleware, getAllVoucherHistory)
 
 router.post("/voucher-histories", createVoucherHistoryMiddleware, createVoucherHistory);
 

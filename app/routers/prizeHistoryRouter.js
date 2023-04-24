@@ -22,7 +22,7 @@ const {
     deletePrizeHistoryById
 } = require("../controllers/prizeHistoryController");
 
-router.get("/prize-histories", getAllPrizeHistoryMiddleware, getAllPrizeHistory)
+router.get("/prize-history", getAllPrizeHistoryMiddleware, getAllPrizeHistory)
 
 router.post("/prize-histories", createPrizeHistoryMiddleware, createPrizeHistory);
 

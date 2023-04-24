@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 
 // Import VoucherHistory Model
 const voucherHistoryModel = require("../models/voucherHistoryModel");
+const userModel = require("../models/userModel");
+
 
 const createVoucherHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
@@ -75,34 +77,34 @@ const getVoucherHistoryById = (request, response) => {
     })
 }
 
-const getAllVoucherHistory = (request, response) => {
-    // B1: Chuẩn bị dữ liệu
-    let userId = req.query.user;
+// const getAllVoucherHistory = (request, response) => {
+//     // B1: Chuẩn bị dữ liệu
+//     let userId = req.query.user;
 
-    //tạo ra điều kiện lọc
-    let condition = {};
+//     //tạo ra điều kiện lọc
+//     let condition = {};
 
-    if (userId) {
-        condition.user = userId;
-    }
-    // B2: Validate dữ liệu
-    // B3: Gọi Model tạo dữ liệu
-    voucherHistoryModel
-        .find(condition)
-        .exec((error, data) => {
-            if (error) {
-                return response.status(500).json({
-                    status: "Internal server error",
-                    message: error.message
-                })
-            }
+//     if (userId) {
+//         condition.user = userId;
+//     }
+//     // B2: Validate dữ liệu
+//     // B3: Gọi Model tạo dữ liệu
+//     voucherHistoryModel
+//         .find(condition)
+//         .exec((error, data) => {
+//             if (error) {
+//                 return response.status(500).json({
+//                     status: "Internal server error",
+//                     message: error.message
+//                 })
+//             }
 
-            return response.status(200).json({
-                status: "Get all voucherHistory successfully",
-                data: data
-            })
-        })
-}
+//             return response.status(200).json({
+//                 status: "Get all voucherHistory successfully",
+//                 data: data
+//             })
+//         })
+// }
 
 const updateVoucherHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
@@ -183,6 +185,40 @@ const deleteVoucherHistoryById = (request, response) => {
         })
     })
 }
+
+//function find dice history by userName
+const getAllVoucherHistory = async (request, response) => {
+    //B1: chuẩn bị dữ liệu
+    const userName = request.query.userName;
+
+    // Sử dụng userModel tìm kiếm bằng userName
+    try {
+        const findUser = await userModel.findOne({ userName: userName }).exec()
+        
+        if (!findUser) {
+            return response.status(404).json({
+                status: `User ${userName} not found`,
+                data: null
+            })
+        }
+
+        const findDiceHistory = await voucherHistoryModel.find({ user: findUser._id }).exec()
+        console.log(findDiceHistory)
+        const voucherArray = findDiceHistory.map(item => item.voucher);
+        console.log(voucherArray)
+        return response.status(200).json({
+            status: `Get all voucher of ${userName} success`,
+            data: voucherArray
+        })
+
+    } catch (error) {
+        return response.status(500).json({
+            status: "Internal server error",
+            message: error.message
+        })
+    }
+}
+
 
 module.exports = {
     getVoucherHistoryById: getVoucherHistoryById,

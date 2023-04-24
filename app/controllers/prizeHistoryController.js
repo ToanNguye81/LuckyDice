@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 // Import PrizeHistory Model
 const prizeHistoryModel = require("../models/prizeHistoryModel");
+const userModel = require("../models/userModel");
 
 const createPrizeHistory = (request, response) => {
     // B1: Chuẩn bị dữ liệu
@@ -80,35 +81,35 @@ const getPrizeHistoryById = (request, response) => {
     })
 }
 
-const getAllPrizeHistory = (request, response) => {
-    // B1: Chuẩn bị dữ liệu
-    //thu thập dữ liệu trên front-end
-    let userId = req.query.user;
+// const getAllPrizeHistory = (request, response) => {
+//     // B1: Chuẩn bị dữ liệu
+//     //thu thập dữ liệu trên front-end
+//     let userId = req.query.user;
 
-    //tạo ra điều kiện lọc
-    let condition = {};
+//     //tạo ra điều kiện lọc
+//     let condition = {};
 
-    if (userId) {
-        condition.user = userId;
-    }
-    // B2: Validate dữ liệu
-    // B3: Gọi Model tạo dữ liệu
-    prizeHistoryModel
-        .find(condition)
-        .exec((err, data) => {
-            if (err) {
-                return request.status(500).json({
-                    status: "Error 500: internal server error",
-                    message: err.message
-                })
-            } else {
-                return request.status(201).json({
-                    status: "Load all prize history successfully!",
-                    data: data
-                })
-            }
-        })
-}
+//     if (userId) {
+//         condition.user = userId;
+//     }
+//     // B2: Validate dữ liệu
+//     // B3: Gọi Model tạo dữ liệu
+//     prizeHistoryModel
+//         .find(condition)
+//         .exec((err, data) => {
+//             if (err) {
+//                 return request.status(500).json({
+//                     status: "Error 500: internal server error",
+//                     message: err.message
+//                 })
+//             } else {
+//                 return request.status(201).json({
+//                     status: "Load all prize history successfully!",
+//                     data: data
+//                 })
+//             }
+//         })
+// }
 
 const updatePrizeHistoryById = (request, response) => {
     // B1: Chuẩn bị dữ liệu
@@ -190,10 +191,44 @@ const deletePrizeHistoryById = (request, response) => {
     })
 }
 
+//function find dice history by userName
+const getAllPrizeHistory = async (request, response) => {
+    //B1: chuẩn bị dữ liệu
+    const userName = request.query.userName;
+
+    // Sử dụng userModel tìm kiếm bằng userName
+    try {
+        const findUser = await userModel.findOne({ userName: userName }).exec()
+        
+        if (!findUser) {
+            return response.status(404).json({
+                status: `User ${userName} not found`,
+                data: null
+            })
+        }
+
+        const findDiceHistory = await prizeHistoryModel.find({ user: findUser._id }).exec()
+        console.log(findDiceHistory)
+        const prizeArray = findDiceHistory.map(item => item.prize);
+        console.log(prizeArray)
+        return response.status(200).json({
+            status: `Get all prize of ${userName} success`,
+            data: prizeArray
+        })
+
+    } catch (error) {
+        return response.status(500).json({
+            status: "Internal server error",
+            message: error.message
+        })
+    }
+}
+
+
 module.exports = {
     getPrizeHistoryById,
     createPrizeHistory,
     getAllPrizeHistory,
     updatePrizeHistoryById,
-    deletePrizeHistoryById
+    deletePrizeHistoryById,
 }
